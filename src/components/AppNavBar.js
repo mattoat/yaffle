@@ -45,7 +45,7 @@ const AppNavBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            <Link href="#">
+            <Link href="/">
               <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
@@ -81,7 +81,9 @@ const AppNavBar = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Link href= {'/' + page}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
               
@@ -93,13 +95,14 @@ const AppNavBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <Link href="#">
+            <Link href="/">
               <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
+                href={'/'+ page}
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
@@ -132,9 +135,11 @@ const AppNavBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <Link href={'/' + setting}>
+                  <MenuItem key={setting} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
