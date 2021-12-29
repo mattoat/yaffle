@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-yaffle-dev-135836-authRole",
+      "UnauthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-135836-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-135836-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-yaffle-dev-135836-deployment",
+      "UnauthRoleName": "amplify-yaffle-dev-135836-unauthRole",
+      "StackName": "amplify-yaffle-dev-135836",
+      "StackId": "arn:aws:cloudformation:us-east-1:182960085466:stack/amplify-yaffle-dev-135836/429039d0-67e6-11ec-97f7-0e89b415ae3d",
+      "AmplifyAppId": "d27yu949cccnmq"
+    },
+    "categories": {
+      "auth": {
+        "yaffle55fd86c955fd86c9": {}
+      }
+    }
+  }
+}
