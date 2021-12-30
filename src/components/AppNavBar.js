@@ -37,7 +37,7 @@ const AppNavBar = () => {
   };
 
   return (
-    <AppBar elevation={9} position="static">
+    <AppBar elevation={9}style={{position:'sticky'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography

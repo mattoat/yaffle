@@ -1,12 +1,12 @@
-import { Paper } from '@mui/material';
+import Page from '../components/Page';
 
 
 
 export default function HomePage() {
     return(
-        <Paper elevation={1}>
-        <h1>Home</h1>
-        <p>Welcome to yaffle.</p>
-      </Paper>
+        <Page>
+          <h1>Home</h1>
+          <p>Welcome to yaffle.</p>
+      </Page>
       );
 }

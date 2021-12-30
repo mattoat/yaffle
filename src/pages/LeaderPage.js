@@ -1,12 +1,12 @@
-import { Paper } from '@mui/material';
+import Page from '../components/Page';
 
 
 
 export default function AboutPage() {
     return(
-        <Paper elevation={1}>
-        <h1>Leaderboard</h1>
-        <p>There should be a Leaderboard here.</p>
-      </Paper>
+        <Page>
+          <h1>Leaderboard</h1>
+          <p>There should be a Leaderboard here.</p>
+      </Page>
       );
 }
