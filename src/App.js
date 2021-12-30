@@ -1,5 +1,5 @@
 import AppNavBar from './components/AppNavBar';
-import AboutPage from './pages/AboutPage';
+import RulesPage from './pages/RulesPage';
 import LeaderPage from './pages/LeaderPage';
 import LeaguePage from './pages/LeaguePage';
 import HomePage from './pages/HomePage';
@@ -15,11 +15,11 @@ export default function App() {
   return (
     <div className="App">
         <div>
-        <BrowserRouter>
+        <BrowserRouter >
           <Routes>
-            <Route path='/' element={<Layout/>}>
+            <Route path='/' element={<Layout />}>
               <Route index element={<HomePage />} />
-              <Route path='about' element={<AboutPage/>} />
+              <Route path='rules' element={<RulesPage/>} />
               <Route path='leaderboard' element={<LeaderPage/>} />
               <Route path='leagues' element={<LeaguePage/>} />
               <Route path='profile' element={<ProfilePage/>} />

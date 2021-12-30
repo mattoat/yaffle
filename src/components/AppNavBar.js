@@ -12,12 +12,37 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
+import Slide from '@mui/material/Slide';
+
 
 const logo = "/assets/FullLogoWhite.svg";
-const pages = ['About', 'Leaderboard', 'Leagues'];
+const pages = ['Rules', 'Leaderboard', 'Leagues'];
 const settings = ['Profile', 'Account', 'Logout'];
 
-const AppNavBar = () => {
+const sticky = {
+  position: 'sticky'
+};
+
+
+function HideOnScroll(props) {
+  const { children, window } = props;
+  // Note that you normally won't need to set the window ref as useScrollTrigger
+  // will default to window.
+  // This is only being set here because the demo is in an iframe.
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+  });
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
+}
+
+
+const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -37,7 +62,8 @@ const AppNavBar = () => {
   };
 
   return (
-    <AppBar elevation={9}style={{position:'sticky'}}>
+    <HideOnScroll {...props} >
+    <AppBar style={sticky} >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -147,6 +173,8 @@ const AppNavBar = () => {
         </Toolbar>
       </Container>
     </AppBar>
+    </HideOnScroll>
+
   );
 };
 export default AppNavBar;

@@ -1,10 +1,10 @@
 import Page from '../components/Page';
 
 
-export default function AboutPage() {
+export default function RulesPage() {
     return(
         <Page>
-          <h1>About</h1>
+          <h1>Rules</h1>
           <p>Yaffle Football is a fantasy football web app.</p>
         </Page>
       );
