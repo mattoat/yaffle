@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 
+const logo = "FullLogoWhite.svg";
 const pages = ['About', 'Leaderboard', 'Leagues'];
 const settings = ['Profile', 'Account', 'Logout'];
 
@@ -46,7 +47,7 @@ const AppNavBar = () => {
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             <Link to="/">
-              <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
+              <img src={logo} alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
 
@@ -96,7 +97,7 @@ const AppNavBar = () => {
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             <Link to="/">
-              <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
+              <img src={logo} alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
