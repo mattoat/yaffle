@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const pages = ['About', 'Leaderboard', 'Leagues'];
 const settings = ['Profile', 'Account', 'Logout'];
@@ -45,7 +45,7 @@ const AppNavBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            <Link href="/">
+            <Link to="/">
               <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
@@ -81,7 +81,7 @@ const AppNavBar = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link href= {'/' + page}>
+                  <Link to= {'/' + page}>
                     <Typography textAlign="center">{page}</Typography>
                   </Link>
                 </MenuItem>
@@ -95,7 +95,7 @@ const AppNavBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <Link href="/">
+            <Link to="/">
               <img src="FullLogoWhite.svg" alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
@@ -135,7 +135,7 @@ const AppNavBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Link href={'/' + setting}>
+                <Link to={'/' + setting}>
                   <MenuItem key={setting} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
