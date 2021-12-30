@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 
-const logo = "FullLogoWhite.svg";
+const logo = "/assets/FullLogoWhite.svg";
 const pages = ['About', 'Leaderboard', 'Leagues'];
 const settings = ['Profile', 'Account', 'Logout'];
 
