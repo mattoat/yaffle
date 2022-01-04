@@ -14,11 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Slide from '@mui/material/Slide';
-
+import AppMenu from './AppMenu';
 
 const logo = "/assets/FullLogoWhite.svg";
-const pages = ['Rules', 'Leaderboard', 'Leagues'];
-const settings = ['Profile', 'Account', 'Logout'];
 
 const sticky = {
   position: 'sticky'
@@ -46,6 +44,7 @@ const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,12 +53,9 @@ const AppNavBar = (props) => {
   };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+      setAnchorElNav(null);
+    };
+  
 
   return (
     <HideOnScroll {...props} >
@@ -106,7 +102,7 @@ const AppNavBar = (props) => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
+              {props.pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Link to= {'/' + page}>
                     <Typography textAlign="center">{page}</Typography>
@@ -127,7 +123,7 @@ const AppNavBar = (props) => {
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {props.pages.map((page) => (
               <Button
                 href={'/'+ page}
                 key={page}
@@ -145,30 +141,7 @@ const AppNavBar = (props) => {
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <Link to={'/' + setting}>
-                  <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
+            <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />
           </Box>
         </Toolbar>
       </Container>
