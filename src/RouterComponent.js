@@ -12,6 +12,7 @@ import ProfilePage from './pages/settings/ProfilePage';
 import AccountPage from './pages/settings/AccountPage';
 import Authenticator from './pages/auth/Authenticator';
 import {Routes, Route, Navigate, useLocation} from 'react-router-dom'
+import ForgotPassword from './pages/auth/ForgotPassword';
 
 export const BContext = createContext();
 export const SetBContext = createContext();
@@ -56,6 +57,7 @@ export default function RouterComponent() {
             <Route index element={<HomePage />} />
             <Route path='login' element={<Authenticator />} />
             <Route path="sign_up_/_log_in" element={<Navigate replace to="/login" />} />
+            <Route path="forgot_password" element={<ForgotPassword/>} />
             <Route path='leaderboard'element={<RequireAuth b={b}> <LeaderPage /> </RequireAuth>} />
             <Route path='leagues' element={<RequireAuth b={b}> <LeaguePage /> </RequireAuth>} />
             <Route path='rules' element={<RequireAuth b={b}> <RulesPage />  </RequireAuth> } />

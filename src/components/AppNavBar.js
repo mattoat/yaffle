@@ -11,10 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import Slide from '@mui/material/Slide';
 import AppMenu from './AppMenu';
+import { Auth } from 'aws-amplify';
+import { BContext } from '../RouterComponent';
 
 const logo = "/assets/FullLogoWhite.svg";
 
@@ -25,9 +27,6 @@ const sticky = {
 
 function HideOnScroll(props) {
   const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
   const trigger = useScrollTrigger({
     target: window ? window() : undefined,
   });
@@ -43,6 +42,10 @@ function HideOnScroll(props) {
 const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [showBurger, setShowBurger] = React.useState(true)
+  const location = useLocation()
+  const [username, setUsername] = React.useState("placeholder")
+  const b = React.useContext(BContext)
 
 
   const handleOpenNavMenu = (event) => {
@@ -55,7 +58,13 @@ const AppNavBar = (props) => {
   const handleCloseNavMenu = () => {
       setAnchorElNav(null);
     };
-  
+  React.useEffect(() => {
+    if(props.pages.length === 0) {setShowBurger(false)}
+    if(b) {
+      let {un} = Auth.currentAuthenticatedUser();
+      setUsername(un);
+    }
+  },[location])
 
   return (
     <HideOnScroll {...props} >
@@ -73,7 +82,7 @@ const AppNavBar = (props) => {
             </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {showBurger && (<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -111,7 +120,7 @@ const AppNavBar = (props) => {
               ))}
               
             </Menu>
-          </Box>
+          </Box>)}
           <Typography
             variant="h6"
             noWrap
@@ -134,6 +143,7 @@ const AppNavBar = (props) => {
               </Button>
             ))}
           </Box>
+          <h6>{username}</h6>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

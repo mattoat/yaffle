@@ -1,4 +1,4 @@
-import { TextField, Button, Card, LinearProgress } from '@mui/material';
+import { TextField, Button, Card, LinearProgress, Alert } from '@mui/material';
 import {styles} from '../../styles/styles'
 import { Auth } from 'aws-amplify'
 import React, {useState, useContext} from 'react';
@@ -15,40 +15,50 @@ function Register (){
   }
   const [loading, setLoading] = useState(false)
   const [creds, setCreds] = useState(initialCreds)
+  const [error, setError] = useState("")
   const setB = useContext(SetBContext)
 
-  async function onChange(key, value) {
-      setCreds({...creds, [key]: value})
+    async function onChange(key, value) {
+        setCreds({...creds, [key]: value})
       
-  }
+    }
 
-  let navigate = useNavigate();
-  let location = useLocation();
+    let navigate = useNavigate();
+    let location = useLocation();
 
     async function signUp () {
         setLoading(true); 
         const {username, password, email} = creds
-        await Auth.signUp({
-            username,
-            password,
-            attributes: {email}
-        })
-        .then(() => setCreds({...creds, showConfirmation: true }))
-        .catch(err => console.log('error signing up: ', err))
+        console.log(username + " " + password + " " + email)
+        try{
+            await Auth.signUp({
+                username,
+                password,
+                attributes: {email}
+            });
+            setCreds({...creds, showConfirmation: true })
+        }
+        catch(err){
+            setError(err + "")
+            console.log('error signing up: ', err)
+        }
         setLoading(false); 
     }
   
     async function confirmSignUp () {
+        setLoading(true); 
+        const {username, authCode} = creds
+        console.log(username + " " + authCode)
         try {
-            setLoading(true); 
-            const {username, authCode} = creds
-            console.log(username + " " + authCode)
             await Auth.confirmSignUp(username, authCode)
             let from = location.state?.from?.pathname || "/";
             setB(true)
             navigate(from, { replace: true });
         }
-        catch(err){console.log('error confirming signing up: ', err)}
+        catch(err){
+            console.log('error confirming signing up: ', err)
+            setError(err)
+        }
         setLoading(false);  
 
     }
@@ -57,7 +67,7 @@ function Register (){
         const {username} = creds
         await Auth.resendSignUp(username)
         .then(() => {setLoading(true); setCreds({...creds, showConfirmation: true });setLoading(false); })
-        .catch(err => console.log('error resending code: ', err))
+            .catch(err => {console.log('error resending code: ', err); setError(err)})
     }
 
     const { showConfirmation } = creds
@@ -95,6 +105,7 @@ function Register (){
                     </div>
             )}
             {loading && (<LinearProgress color="secondary" />)}
+            {(error !== '') && (<Alert onClick={() => setError("")} severity="error">{error}</Alert>)}
         </Card>
       );
 }

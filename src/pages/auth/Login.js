@@ -1,6 +1,6 @@
 import { Card } from '@mui/material';
-import { TextField, Button, LinearProgress } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { TextField, Button, LinearProgress, Alert } from '@mui/material';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { SetBContext } from '../../RouterComponent';
@@ -12,28 +12,38 @@ function Login () {
         password: '',
         user: {}
     }
+    const [error, setError] = useState("")
     const setB = useContext(SetBContext)
     const [loading, setLoading] = useState(false)
     const [creds, setCreds] = useState(initialCreds)
+
+    let navigate = useNavigate();
+    let location = useLocation();
+        
+
+    const routeChange = () =>{ 
+    let path = `/forgot_password`; 
+    navigate(path, {replace: true});
+  }
 
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
     }
 
-    let navigate = useNavigate();
-    let location = useLocation();
-        
     async function login () {
         setLoading(true); 
-        await Auth.signIn(creds.username, creds.password)
-        .then(userD => {
+        try{
+            let userD = await Auth.signIn(creds.username, creds.password)
             setCreds({...creds, user: {userD}})
             setB(true)
             let from = location.state?.from?.pathname || "/";
             navigate(from, { replace: true });
 
-        })
-        .catch(err => console.log('errror signing in...: ', err))
+        }
+        catch(err) { 
+            console.log('errror signing in...: ', err)
+            setError(err + "")
+        }
         setLoading(false); 
     }
         return(                 
@@ -50,7 +60,9 @@ function Login () {
                     autoComplete="current-password"
                 /><br /> <br />
                 <Button onClick={login} color='secondary' variant="contained">Log In</Button> <br /> <br />
+                <Button onClick= {routeChange} color="secondary" variant="text">Forgot Password?</Button><br /><br />
                 {loading && (<LinearProgress color="secondary" />)}
+                {(error !== '') && (<Alert severity="error">{error}</Alert>)}
             </Card>
     );
 }
