@@ -14,7 +14,8 @@ const paperStyle = {
     padding: '6%',
     backgroundColor: '#F9FBFF',
     textAlign:'center',
-    marginBottom:'5%'
+    marginBottom:'5%', 
+    display: 'flow-root'
   };
 
 export default function Page(props) {

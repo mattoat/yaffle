@@ -1,22 +1,15 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import {AppBar, Box, Toolbar,
+  IconButton, Typography, Menu,
+   Container, Avatar, Button,
+   Tooltip, MenuItem, useScrollTrigger,
+    Slide} from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import { Link, useLocation } from 'react-router-dom';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
-import Slide from '@mui/material/Slide';
 import AppMenu from './AppMenu';
-import { Auth } from 'aws-amplify';
-import { BContext } from '../RouterComponent';
+import { Auth, Storage } from 'aws-amplify';
+import { BContext, AvatarContext, SetAvatarContext} from '../RouterComponent'
+import { useState, useContext, useEffect } from 'react';
 
 const logo = "/assets/FullLogoWhite.svg";
 
@@ -40,12 +33,14 @@ function HideOnScroll(props) {
 
 
 const AppNavBar = (props) => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [showBurger, setShowBurger] = React.useState(true)
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [showBurger, setShowBurger] = useState(true)
   const location = useLocation()
-  const [username, setUsername] = React.useState("placeholder")
-  const b = React.useContext(BContext)
+  const [un, setUn] = useState("")
+  const b = useContext(BContext)
+  const avatar = useContext(AvatarContext)
+  const setAvatar = useContext(SetAvatarContext)
 
 
   const handleOpenNavMenu = (event) => {
@@ -54,17 +49,26 @@ const AppNavBar = (props) => {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
       setAnchorElNav(null);
     };
-  React.useEffect(() => {
-    if(props.pages.length === 0) {setShowBurger(false)}
+
+  const getUsername = async () => {
     if(b) {
-      let {un} = Auth.currentAuthenticatedUser();
-      setUsername(un);
+      const {username} = await Auth.currentAuthenticatedUser();
+      setUn(username);
     }
+    else {
+      setUn("");
+    }
+  }
+
+
+  useEffect(() => {
+    if(props.pages.length === 0) {setShowBurger(false)}
+    getUsername()
   },[location])
+  
 
   return (
     <HideOnScroll {...props} >
@@ -143,12 +147,13 @@ const AppNavBar = (props) => {
               </Button>
             ))}
           </Box>
-          <h6>{username}</h6>
-
+          <Box style={{paddingRight:'50px'}}>
+            <h3>{un}</h3>
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar src={avatar} alt="User settings" />
               </IconButton>
             </Tooltip>
             <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />

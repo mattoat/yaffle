@@ -9,8 +9,7 @@ export default function HomePage() {
             <Card elevation={1} style={styles.cardStyle}>
                 <img style={styles.imgStyle} src={brandSrc} alt='Yaffle' />
             </Card>
-                <h1>Welcome to Yaffle.</h1>
-                <h5>the fantasy football web app.</h5>
+                <h1>Welcome to Yaffle - the fantasy football web app.</h1>
             <p>Yaffle is a simple game of football prediction. You're tested on your current knowledge of football by 
               predicting which club will win in 8 distinct leagues around Europe. For every point your selected teams earn 
               in their league, you also earn a point on the Yaffle leaderboard. Anyone can join the game at any point in the 

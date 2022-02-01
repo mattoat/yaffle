@@ -9,7 +9,16 @@
       "UnauthRoleName": "amplify-yaffle-dev-135836-unauthRole",
       "StackName": "amplify-yaffle-dev-135836",
       "StackId": "arn:aws:cloudformation:us-east-1:182960085466:stack/amplify-yaffle-dev-135836/429039d0-67e6-11ec-97f7-0e89b415ae3d",
-      "AmplifyAppId": "d27yu949cccnmq"
+      "AmplifyAppId": "d27yu949cccnmq",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-yaffle-dev-135836-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "function": {
+        "fetchleagues": {
+          "deploymentBucketName": "amplify-yaffle-dev-135836-deployment",
+          "s3Key": "amplify-builds/fetchleagues-2b6467304f316f787338-build.zip"
+        }
+      }
     }
   }
 }

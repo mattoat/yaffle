@@ -3,6 +3,9 @@ export const styles = {
     green: {
         backgroundColor: '#166924'
     },
+    alignLeft: {
+      float:'left',
+    },
     imgStyle: {
         float:'center',
         display: 'block',
@@ -13,7 +16,7 @@ export const styles = {
     },
     cardStyle: {
         padding:'5px',
-        width: '60%',
+        width: '80%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: '20px'
@@ -41,5 +44,5 @@ export const styles = {
     },
     img: {
       width: '30%'
-    }
+    },
 }
