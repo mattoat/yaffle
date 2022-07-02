@@ -1,5 +1,8 @@
 
 export const styles = {
+    rightFloat: {
+      float: 'right'
+    },
     green: {
         backgroundColor: '#166924'
     },
