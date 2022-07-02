@@ -22,7 +22,6 @@ export default function Layout() {
 
   useEffect(() => {
     if(b) {
-        console.log("navbar authenticated")
         updatePages(['rules', 'leaderboard', 'leagues'])
         updateSettings(['Profile', 'Log Out'])
     }

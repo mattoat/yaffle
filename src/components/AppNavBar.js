@@ -56,21 +56,24 @@ const AppNavBar = (props) => {
   const getUsername = async () => {
     if(b) {
       const {username} = await Auth.currentAuthenticatedUser();
-      setUn(username);
+      return username
     }
     else {
-      setUn("");
+      setAvatar(undefined)
+      return("");
     }
   }
 
-
   useEffect(() => {
-    if(props.pages.length === 0) {setShowBurger(false)}
-    getUsername()
-  },[location])
-  
+    let isMounted = true;     
+    getUsername().then((username) => {
+      if(isMounted) setUn(username);
+    })
+    return () => { isMounted = false };
+  })
 
-  return (
+
+  return (  
     <HideOnScroll {...props} >
     <AppBar style={sticky} >
       <Container maxWidth="xl">
@@ -132,7 +135,7 @@ const AppNavBar = (props) => {
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             <Link to="/">
-              <img src={logo} alt="image" width="100em" alt="Yaffle"/>
+              <img src={logo} float="center" alt="image" width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

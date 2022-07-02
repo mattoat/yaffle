@@ -1,10 +1,12 @@
 import { Card } from '@mui/material';
 import { TextField, Button, LinearProgress, Alert } from '@mui/material';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { SetBContext } from '../../RouterComponent';
+import { BContext, SetBContext } from '../../RouterComponent';
 import {styles} from '../../styles/styles'
+
+
 
 function Login () {
     const initialCreds = {
@@ -12,6 +14,9 @@ function Login () {
         password: '',
         user: {}
     }
+
+    const b = useContext(BContext)
+
     const [error, setError] = useState("")
     const setB = useContext(SetBContext)
     const [loading, setLoading] = useState(false)
@@ -24,6 +29,8 @@ function Login () {
     const routeChange = () =>{ 
     let path = `/forgot_password`; 
     navigate(path, {replace: true});
+
+
   }
 
     async function onChange(key, value) {
@@ -45,6 +52,10 @@ function Login () {
             setError(err + "")
         }
         setLoading(false); 
+    }
+    if(b) {
+        console.log("user authenticated - rerendering")
+        return <Navigate to="/" state={{ from: location }} replace />;
     }
         return(                 
             <Card style = {styles.cardStyle}>

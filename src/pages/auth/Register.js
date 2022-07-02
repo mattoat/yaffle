@@ -7,6 +7,7 @@ import { SetBContext } from '../../RouterComponent';
 
 function Register (){
   const initialCreds = {
+    name: '',
     username: '',
     password: '',
     email: '',
@@ -28,13 +29,13 @@ function Register (){
 
     async function signUp () {
         setLoading(true); 
-        const {username, password, email} = creds
+        const {name, username, password, email} = creds
         console.log(username + " " + password + " " + email)
         try{
             await Auth.signUp({
                 username,
                 password,
-                attributes: {email}
+                attributes: {name, email}
             });
             setCreds({...creds, showConfirmation: true })
         }
@@ -77,7 +78,8 @@ function Register (){
             {(!showConfirmation) && (
                     <div>
                         <h2>Register.</h2>
-                        <TextField onInput={evt => onChange('username', evt.target.value)} name="username" label="Username" color="secondary" /><br /> <br />
+                        <TextField onInput={evt => onChange('name', evt.target.value)} name="name" label="Full Name" color="secondary" /><br /> <br />
+                        <TextField onInput={evt => onChange('username', evt.target.value)}autoComplete='username' name="username" label="Username" color="secondary" /><br /> <br />
                         <TextField 
                             name="password"
                             onChange={evt => onChange('password', evt.target.value)}

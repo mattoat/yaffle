@@ -1,23 +1,20 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-yaffle-dev-135836-authRole",
-      "UnauthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-135836-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-135836-authRole",
+      "AuthRoleName": "amplify-yaffle-dev-162226-authRole",
+      "UnauthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-162226-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::182960085466:role/amplify-yaffle-dev-162226-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-yaffle-dev-135836-deployment",
-      "UnauthRoleName": "amplify-yaffle-dev-135836-unauthRole",
-      "StackName": "amplify-yaffle-dev-135836",
-      "StackId": "arn:aws:cloudformation:us-east-1:182960085466:stack/amplify-yaffle-dev-135836/429039d0-67e6-11ec-97f7-0e89b415ae3d",
-      "AmplifyAppId": "d27yu949cccnmq",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-yaffle-dev-135836-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "DeploymentBucketName": "amplify-yaffle-dev-162226-deployment",
+      "UnauthRoleName": "amplify-yaffle-dev-162226-unauthRole",
+      "StackName": "amplify-yaffle-dev-162226",
+      "StackId": "arn:aws:cloudformation:us-east-1:182960085466:stack/amplify-yaffle-dev-162226/ac17a6f0-f994-11ec-b4ba-0e78e39201b3",
+      "AmplifyAppId": "d3cd9p8xolm31h"
     },
     "categories": {
-      "function": {
-        "fetchleagues": {
-          "deploymentBucketName": "amplify-yaffle-dev-135836-deployment",
-          "s3Key": "amplify-builds/fetchleagues-2b6467304f316f787338-build.zip"
-        }
+      "auth": {
+        "YaffleAuth": {},
+        "yaffle": {}
       }
     }
   }

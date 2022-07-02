@@ -3,7 +3,6 @@ import awsconfig from './aws-exports';
 
 import React, {useState, useEffect, createContext, useContext} from 'react'
 
-
 import RulesPage from './pages/nav/RulesPage';
 import LeaderPage from './pages/nav/LeaderPage';
 import LeaguePage from './pages/nav/LeaguePage';
@@ -25,21 +24,6 @@ export const SetAvatarContext = createContext();
 Amplify.configure(awsconfig);
 
 Storage.configure({track:true, level:'protected'});
-
-
-function RequireAuth(props) {
-
-
-  const b = useContext(BContext)
-  let location = useLocation();
-
-  if(b) {
-    return props.children;
-  }
-  else{
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-}
   
 export default function RouterComponent() {
   
@@ -47,36 +31,52 @@ export default function RouterComponent() {
   const [avatar, setAvatar] = useState(undefined);
   const [b, setB] = useState(BContext)
 
-  useEffect(() => {
-    getProfilePicture();
+  // const b = useContext(BContext)
+  // const setB = useContext(SetBContext)
 
-  },[]);
+    useEffect(() => {
+      if(b){
+        getProfilePicture()
+      }
+    }, [b]);
 
-  
+
+  function RequireAuth(props) {
+
+    let location = useLocation();
+
+    if(b) {
+      return props.children;
+    }
+    else{
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+  }
+
   const getProfilePicture = async () => {
-    const {attributes} = await Auth.currentUserInfo();
-    const user = (attributes.sub);
-    console.log(user)
-    await Storage.get(user + ".jpeg")
-    .then(url => {
+    const p = await Auth.currentUserInfo();
+    console.log(b)
+    if(p!== null){ 
+      const {attributes} = p
+      const user = (attributes.sub);
+      console.log(user)
+      await Storage.get(user + ".jpeg")
+      .then(url => {
         var myRequest = new Request(url);
         fetch(myRequest).then(function(response) {
-        if (response.status === 200) {
+          if (response.status === 200) {
             setAvatar(url);
-        }
+          }
         });
-    })
-    .catch(err => console.log(err));
+      })
+      .catch(err => console.log("User has no profile picture."));
+    }
   };
 
 
-  useEffect(() => {
-    onPageRendered()
-  }, [b]);
-
-  const onPageRendered = async () => {
-    signedIn()
-  };
+  // const onPageRendered = async () => {
+    // signedIn()
+  // };
 
 
   async function signedIn() {
@@ -84,6 +84,7 @@ export default function RouterComponent() {
     .then(user => {console.log("true: " + user); setB(true)})
     .catch(err => {console.log("false: " + err); setB(false)});
   }
+  
   
   return(
     <BContext.Provider value ={b}>
@@ -101,7 +102,8 @@ export default function RouterComponent() {
                   <Route path='rules' element={<RequireAuth b={b}> <RulesPage />  </RequireAuth> } />
                   <Route path='profile' element={<RequireAuth b={b}> <ProfilePage /> </RequireAuth>} />   
                   <Route path='*'  element={<Navigate replace to="/" /> }/>
-                  <Route path='log_out' element={<Logout />} />
+                  <Route path="log_out" element={<Navigate replace to="/logout" />} />
+                  <Route path='logout' element={<Logout />} />
               </Route>
             </Routes>
           </SetAvatarContext.Provider>

@@ -1,0 +1,11 @@
+{
+  "resourceName": "s3yafflestorageprofilepics",
+  "bucketName": "yaffle-storage-profile-pics",
+  "policyUUID": "3abebd43",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ",
+    "CREATE_AND_UPDATE"
+  ]
+}

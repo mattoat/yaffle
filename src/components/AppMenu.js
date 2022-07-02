@@ -33,7 +33,7 @@ export default function AppMenu (props) {
             >
               {props.settings.map((setting) => (
                 <Link key={setting} to={'/' + setting.replace(new RegExp(' ', 'g'), '_')}>
-                  <MenuItem key={setting} onClick={props.handleCloseNavMenu}>
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 </Link>
