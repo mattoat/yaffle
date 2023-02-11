@@ -1,21 +1,14 @@
 import Amplify, { Auth, Storage } from 'aws-amplify';
-import {useEffect} from 'react'
+import {useContext, useEffect} from 'react'
 import { Card } from '@mui/material';
 import { Box } from '@mui/system';
 import Page from '../../components/Page';
 import {styles} from '../../styles/styles';
+import { UsernameContext } from '../../App';
+
 export default function RulesPage() {
 
-
-  async function getUser() {
-    console.log("getting user at rules")
-    const {username, attributes} = await Auth.currentUserInfo();
-    console.log("got user at rules" + username)
-}
-
-useEffect(async () => {
-    await getUser();
-}, [])
+  const {username, setUsername} = useContext(UsernameContext);
 
 
     return(

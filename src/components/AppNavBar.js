@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useLocation } from 'react-router-dom';
 import AppMenu from './AppMenu';
 import { useState, useContext, useEffect } from 'react';
+import {AvatarContext} from '../App';
 
 const logo = "/assets/FullLogoWhite.svg";
 

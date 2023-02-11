@@ -8,8 +8,8 @@ export default function Logout() {
   let location = useLocation();
 
 
-  const {_, setUserData} = useContext(UserDataContext);
-  const {_, setUsername} = useContext(UsernameContext);
+  const {userData, setUserData} = useContext(UserDataContext);
+  const {username, setUsername} = useContext(UsernameContext);
   
   async function logout() {
     try {

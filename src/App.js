@@ -50,6 +50,7 @@ useEffect(() => {
 }, [])
 
 const getProfilePicture = async () => {
+  if(username != null) {
 
     const u = await Auth.currentAuthenticatedUser();
     let string_url = u.attributes.sub + ".jpeg";
@@ -61,6 +62,7 @@ const getProfilePicture = async () => {
         }
       });
     }); 
+  } 
 };
 
 return (

@@ -30,7 +30,6 @@ function Login () {
 
         // let from = location.state?.from?.pathname || "/";
         
-        console.log(userData.username);
         if(userData.username != null){
             setSignedIn(true);
             setUsername(userData.username);

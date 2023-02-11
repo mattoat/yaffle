@@ -3,17 +3,17 @@
   "name": "Fantasy Football",
   "icons": [
     {
-      "src": "./48Favicon.ico",
+      "src": "public/assets/48Favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
     },
     {
-      "src": "./32Favicon.ico",
+      "src": "public/assets/32Favicon.ico",
       "sizes": "32x32 24x24",
       "type":"image/x-icon"
     },
     {
-      "src": "./16Favicon.ico",
+      "src": "public/assets/16Favicon.ico",
       "sizes": "16x16",
       "type":"image/x-icon"
     }
