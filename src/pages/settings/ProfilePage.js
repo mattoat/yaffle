@@ -1,14 +1,17 @@
 import Amplify, { Auth, Storage } from 'aws-amplify';
-import awsconfig from '../../aws-exports';
+import awsconfig from '../../aws-exports.js';
 import React, { useEffect, useState, useContext } from 'react';
 import Page from '../../components/Page';
 import styled from '@emotion/styled';
 import { styles } from '../../styles/styles'; //styles={styles.alignLeft}
 import { Avatar , Card, TextField, Button, LinearProgress, Alert,Table,TableBody,TableContainer,TableRow,TableCell,Paper,TableHead} from '@mui/material';
-import {AvatarContext, SetAvatarContext} from '../../RouterComponent';
-import { LocationSearchingRounded } from '@mui/icons-material';
-const leagues = require ( "../../Leagues")
+import imageCompression from 'browser-image-compression';
 
+import {UserDataContext, UsernameContext, AvatarContext} from '../../App';
+
+
+const league_info = require ( "../../Leagues")
+const leagues = league_info.leagues
 Amplify.configure(awsconfig);
 
 Storage.configure({track:true, level:'protected'});
@@ -23,7 +26,7 @@ const Line = styled.div`
 `
 const PictureFrame = styled.div`
     float: right;
-    border: solid black 1px;
+    border: solid gray 1px;
     border-radius: 50%;
     width: 200px;
     height: 200px;
@@ -47,21 +50,18 @@ const imgStyle = {
 export default function ProfilePage() {
     
     const [loading, setLoading] = useState(false)
-    const [name, setName] = useState()
-    const [user, setUser] = useState()
-    const [email, setEmail] = useState()
-    const [username, setUsername] = useState()
+    const [name, setName] = useState("")
+    const [user, setUser] = useState("")
+    const [email, setEmail] = useState("")
     const [error, setError] = useState("")
 
-    const avatar = useContext(AvatarContext);
-    
+    const {username, setUsername} = useContext(UsernameContext);
+    const {avatar, setAvatar} = useContext(AvatarContext);
     async function getUser() {
-        const {username, attributes} = await Auth.currentUserInfo();
-        setEmail(attributes.email)
-        setName(attributes.name)
-        setUser(attributes.sub)
-        setUsername(username);
-
+        let creds = await Auth.currentAuthenticatedUser();
+        setEmail(creds.attributes.email);
+        setName(creds.attributes.name);
+        setUser(creds.attributes.sub);
     }
 
     useEffect(() => {
@@ -73,7 +73,7 @@ export default function ProfilePage() {
         fileInput.current.click();
     };
 
-    const onProcessFile = e => {
+    const onProcessFile = async (e) => {
         e.preventDefault();
         let reader = new FileReader();
         let file = e.target.files[0];
@@ -82,13 +82,32 @@ export default function ProfilePage() {
         } catch (err) {
             console.log(err);
         }
-        reader.onloadend = () => {
-        };
-        Storage.put((user +".jpeg"), file, {
+
+        // reader.onloadend = () => {
+        // };
+
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920
+          }
+
+
+          try {
+            file = await imageCompression(file, options);
+            console.log(file.size/1024/1024);
+          } catch (error) {
+            console.log(error);
+          }
+        
+        Storage.put((user + ".jpeg"), file, {
             level: "protected",
             contentType: "image/jpeg"
         })
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result)
+            setAvatar(user + ".jpeg");
+            console.log(avatar);
+        })
         .catch(err => console.log(err));
     };
 
@@ -99,6 +118,7 @@ export default function ProfilePage() {
                 <PictureFrame >
                     <input
                         type="file"
+                        accept="image/*" 
                         onChange={onProcessFile}
                         ref={fileInput}
                         hidden={true}
@@ -138,11 +158,11 @@ export default function ProfilePage() {
                     </TableHead>
                     <TableBody>
                     {Object.keys(leagues).map((league) => (
-                        <TableRow key={league.indexOf}
+                        <TableRow key={leagues[league].name}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                         <TableCell component="th" scope="row">
-                            {leagues[league]}
+                            {leagues[league].name}
                         </TableCell>
                         <TableCell align="right">{}</TableCell>
                         <TableCell align="right">{}</TableCell>

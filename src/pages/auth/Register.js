@@ -2,10 +2,12 @@ import { TextField, Button, Card, LinearProgress, Alert } from '@mui/material';
 import {styles} from '../../styles/styles'
 import { Auth } from 'aws-amplify'
 import React, {useState, useContext} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom'
-import { SetBContext } from '../../RouterComponent';
+import {useNavigate, useLocation, Navigate} from 'react-router-dom'
+import {UserDataContext, UsernameContext} from '../../App';
 
 function Register (){
+const {username, setUsername} = useContext(UsernameContext);
+
   const initialCreds = {
     name: '',
     username: '',
@@ -15,9 +17,9 @@ function Register (){
     showConfirmation: false
   }
   const [loading, setLoading] = useState(false)
+  const [signedIn, setSignedIn] = useState(false)
   const [creds, setCreds] = useState(initialCreds)
   const [error, setError] = useState("")
-  const setB = useContext(SetBContext)
 
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
@@ -26,6 +28,10 @@ function Register (){
 
     let navigate = useNavigate();
     let location = useLocation();
+    const { from } = location.state || {
+        from: {
+          pathname: '/'
+        }};
 
     async function signUp () {
         setLoading(true); 
@@ -53,7 +59,8 @@ function Register (){
         try {
             await Auth.confirmSignUp(username, authCode)
             let from = location.state?.from?.pathname || "/";
-            setB(true)
+            setUsername(username);
+            setSignedIn(true);
             navigate(from, { replace: true });
         }
         catch(err){
@@ -67,7 +74,13 @@ function Register (){
     async function resendConfirmationCode ()    {
         const {username} = creds
         await Auth.resendSignUp(username)
-        .then(() => {setLoading(true); setCreds({...creds, showConfirmation: true });setLoading(false); })
+        .then(() => {
+
+            setLoading(true); 
+            setCreds({...creds, showConfirmation: true });
+            setSignedIn(true);
+            setLoading(false); 
+        })
             .catch(err => {console.log('error resending code: ', err); setError(err)})
     }
 
@@ -75,6 +88,13 @@ function Register (){
 
     return(
         <Card style = {styles.cardStyle}>
+            {(signedIn) &&  (
+                    <Navigate to={{
+                    pathname: "/",
+                    state: { referrer: from }
+                    }}
+                    />
+                    )}  
             {(!showConfirmation) && (
                     <div>
                         <h2>Register.</h2>

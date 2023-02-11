@@ -5,10 +5,9 @@ import './styles/index.css';
 import {ThemeProvider} from '@mui/material/styles';
 import {themeOptions} from './styles/theme';
 import Amplify from "aws-amplify";
-import awsExports from "./aws-exports";
+// import awsExports from "./aws-exports.js";
 
-Amplify.configure(awsExports);
-
+// Amplify.configure(awsExports);
 
 ReactDOM.render(
   <React.StrictMode>

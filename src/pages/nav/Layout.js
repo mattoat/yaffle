@@ -1,49 +1,36 @@
 import React, {useContext, useEffect, useState} from "react";
 import AppNavBar from "../../components/AppNavBar";
-import {Auth, Storage} from 'aws-amplify';
 import {Outlet} from "react-router-dom"
-import { BContext } from "../../RouterComponent";
-import {AvatarContext, SetAvatarContext} from '../../RouterComponent';
+import { UserDataContext, UsernameContext } from "../../App";
 
-export default function Layout() {
+
+export default function Layout(props) {
     
     const initSettings = ['Sign Up / Log In'];
     const initPages = [];
 
-    
     const [pages, updatePages] = useState(initPages)
     const [settings, updateSettings] = useState(initSettings)
-    
-    const avatar = useContext(AvatarContext);
-    const setAvatar = useContext(SetAvatarContext);
-    const b = useContext(BContext);
-  
 
+    const {username, setUsername} = useContext(UsernameContext);
 
   useEffect(() => {
-    if(b) {
+    
+    if(username != null) {
         updatePages(['rules', 'leaderboard', 'leagues'])
         updateSettings(['Profile', 'Log Out'])
     }
-    if(!b){
+    else{
+      console.log("Clearing navbar options")
         updateSettings(initSettings)
         updatePages(initPages)
     }
-},[b]);
-
+  },[username]);
 
     return (
         <div>
-          {
-            (b) && (
-                <AppNavBar pages={pages} settings={settings}></AppNavBar>)
-          }
-          {
-            (!b) && (
-                <AppNavBar pages={pages} settings={settings} />
-            )
-          }
-        
+        <AppNavBar pages={pages} settings={settings} />
+        {props.children}
         <Outlet />
       </div>
       );

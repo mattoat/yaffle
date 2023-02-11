@@ -7,8 +7,6 @@ import {AppBar, Box, Toolbar,
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useLocation } from 'react-router-dom';
 import AppMenu from './AppMenu';
-import { Auth, Storage } from 'aws-amplify';
-import { BContext, AvatarContext, SetAvatarContext} from '../RouterComponent'
 import { useState, useContext, useEffect } from 'react';
 
 const logo = "/assets/FullLogoWhite.svg";
@@ -35,14 +33,8 @@ function HideOnScroll(props) {
 const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [showBurger, setShowBurger] = useState(true)
-  const location = useLocation()
-  const [un, setUn] = useState("")
-  const b = useContext(BContext)
-  const avatar = useContext(AvatarContext)
-  const setAvatar = useContext(SetAvatarContext)
 
-
+  const {avatar, setAvatar} = useContext(AvatarContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -52,26 +44,6 @@ const AppNavBar = (props) => {
   const handleCloseNavMenu = () => {
       setAnchorElNav(null);
     };
-
-  const getUsername = async () => {
-    if(b) {
-      const {username} = await Auth.currentAuthenticatedUser();
-      return username
-    }
-    else {
-      setAvatar(undefined)
-      return("");
-    }
-  }
-
-  useEffect(() => {
-    let isMounted = true;     
-    getUsername().then((username) => {
-      if(isMounted) setUn(username);
-    })
-    return () => { isMounted = false };
-  })
-
 
   return (  
     <HideOnScroll {...props} >
@@ -85,11 +57,11 @@ const AppNavBar = (props) => {
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             <Link to="/">
-              <img src={logo} alt="image" width="100em" alt="Yaffle"/>
+              <img src={logo} width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
 
-          {showBurger && (<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {(<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -119,11 +91,11 @@ const AppNavBar = (props) => {
               }}
             >
               {props.pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to= {'/' + page}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </Link>
-                </MenuItem>
+                <Link key={page} to= {'/' + page}>
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.charAt(0).toUpperCase() + page.slice(1)}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
               
             </Menu>
@@ -150,8 +122,8 @@ const AppNavBar = (props) => {
               </Button>
             ))}
           </Box>
-          <Box style={{paddingRight:'50px'}}>
-            <h3>{un}</h3>
+          <Box style={{paddingRight:'30px'}}>
+            <h3>{props.un}</h3>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

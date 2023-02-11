@@ -3,7 +3,7 @@ import Page from '../../components/Page'
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { SetBContext } from '../../RouterComponent';
+
 import {styles} from '../../styles/styles'
 
 

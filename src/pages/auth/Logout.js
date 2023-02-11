@@ -2,31 +2,32 @@ import Page from '../../components/Page';
 import { Link, useLocation, Navigate} from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 import {Auth} from 'aws-amplify'
-import { SetBContext } from '../../RouterComponent';
-import { BContext } from '../../RouterComponent';
+import { UserDataContext, UsernameContext } from '../../App';
 
 export default function Logout() { 
   let location = useLocation();
 
 
-  const setB = useContext(SetBContext)
-  const b = useContext(BContext)
+  const {_, setUserData} = useContext(UserDataContext);
+  const {_, setUsername} = useContext(UsernameContext);
+  
   async function logout() {
     try {
-        setB(false)
-        Auth.signOut();
+      await Auth.signOut();
+        setUserData(null);
+        setUsername(null);
         console.log("Signed out")
 
-        let from = location.state?.from?.pathname || "/login";
+        let from = location.state?.from?.pathname || "/";
         return <Navigate to="/" state={{ from: location }} replace />;
 
     } catch (error) {
         console.log('error signing out: ', error);
     }
-}
+  }
   useEffect(() => {
     logout()
-  })
+  },[])
   
 
     return (
