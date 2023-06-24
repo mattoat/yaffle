@@ -1,39 +1,46 @@
 import Page from '../../components/Page';
 import { Link, useLocation, Navigate} from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
-import {Auth} from 'aws-amplify'
-import { UserDataContext, UsernameContext } from '../../App';
+import React, { useContext, useState, useEffect } from 'react';
+import { UserDataContext} from '../../App';
+import {getAuth} from 'firebase/auth';
+
+import { CircularProgress } from '@mui/material';
+
 
 export default function Logout() { 
-  let location = useLocation();
-
-
-  const {userData, setUserData} = useContext(UserDataContext);
-  const {username, setUsername} = useContext(UsernameContext);
   
-  async function logout() {
-    try {
-      await Auth.signOut();
-        setUserData(null);
-        setUsername(null);
-        console.log("Signed out")
+  const [signedOut, setSignedOut] = useState(0) // 0 for loading, 1 for signed out, 2 for error
+  
+  
+  async function logoutUser() {
 
-        let from = location.state?.from?.pathname || "/";
-        return <Navigate to="/" state={{ from: location }} replace />;
-
-    } catch (error) {
-        console.log('error signing out: ', error);
+    console.log("signed out " + signedOut)
+    if (signedOut == 0) {
+      let auth = getAuth();
+      auth.signOut();
+      setSignedOut(1);
+    }
+    else {
+      setSignedOut(2);
     }
   }
   useEffect(() => {
-    logout()
+    logoutUser();
   },[])
-  
 
     return (
       <Page>
-          <h1>Logged out.</h1>
-          <p>You are now logged out. To access more of Yaffle's feature's you will need to <Link to="/login">log back in.</Link></p>
+        {(signedOut == 1) && (
+            <div>
+              <h1>Logged out.</h1>
+              <p>You are now logged out. To access more of Yaffle's features you will need to <Link to="/login">log back in.</Link></p>
+            </div>
+          )}
+          {signedOut == 0 && (
+            <div>
+              <CircularProgress />
+            </div>
+          )}
       </Page>
     );
 }

@@ -1,4 +1,4 @@
-import Amplify, { Auth, Storage } from 'aws-amplify';
+
 import awsconfig from '../../aws-exports.js';
 import React, { useEffect, useState, useContext } from 'react';
 import Page from '../../components/Page';
@@ -7,14 +7,17 @@ import { styles } from '../../styles/styles'; //styles={styles.alignLeft}
 import { Avatar , Card, TextField, Button, LinearProgress, Alert,Table,TableBody,TableContainer,TableRow,TableCell,Paper,TableHead} from '@mui/material';
 import imageCompression from 'browser-image-compression';
 
-import {UserDataContext, UsernameContext, AvatarContext} from '../../App';
+import {UserDataContext, AvatarContext} from '../../App';
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {getAuth, updateProfile} from 'firebase/auth';
+import { CoPresent } from '@mui/icons-material';
+
 
 
 const league_info = require ( "../../Leagues")
 const leagues = league_info.leagues
-Amplify.configure(awsconfig);
 
-Storage.configure({track:true, level:'protected'});
+
 
 const Title = styled.h3`
     float:left;
@@ -55,18 +58,25 @@ export default function ProfilePage() {
     const [email, setEmail] = useState("")
     const [error, setError] = useState("")
 
-    const {username, setUsername} = useContext(UsernameContext);
+    const {userData, setUserData} = useContext(UserDataContext);
     const {avatar, setAvatar} = useContext(AvatarContext);
-    async function getUser() {
-        let creds = await Auth.currentAuthenticatedUser();
-        setEmail(creds.attributes.email);
-        setName(creds.attributes.name);
-        setUser(creds.attributes.sub);
+
+
+    const getUser = () => {
+
+        setName(userData.displayName);
+        setEmail(userData.email);
+        setUser(userData.uid);
+        setAvatar(userData.photoURL);
+
+        // The user object has basic properties such as display name, email, etc.
+        
     }
 
     useEffect(() => {
         getUser();
     }, [])
+
     let fileInput = React.createRef();
 
     const onOpenFileDialog = () => {
@@ -75,16 +85,8 @@ export default function ProfilePage() {
 
     const onProcessFile = async (e) => {
         e.preventDefault();
-        let reader = new FileReader();
-        let file = e.target.files[0];
-        try {
-          reader.readAsDataURL(file);
-        } catch (err) {
-            console.log(err);
-        }
 
-        // reader.onloadend = () => {
-        // };
+        let file = e.target.files[0];
 
         const options = {
             maxSizeMB: 1,
@@ -99,17 +101,44 @@ export default function ProfilePage() {
             console.log(error);
           }
         
-        Storage.put((user + ".jpeg"), file, {
-            level: "protected",
-            contentType: "image/jpeg"
-        })
-        .then(result => {
-            console.log(result)
-            setAvatar(user + ".jpeg");
-            console.log(avatar);
-        })
-        .catch(err => console.log(err));
-    };
+          // UPLOAD PICTURE TO FIREBASE
+          const storage = getStorage();
+          
+          let avatar_url = "profilepics/" + userData.uid + ".png";
+          console.log(avatar_url);
+          const reference = ref(storage, avatar_url);
+
+          setLoading(true);
+          const uploadTask = uploadBytesResumable(reference, file);
+          setLoading(false);
+          console.log("Complete");
+
+          let auth = getAuth();
+
+          
+          getDownloadURL(ref(storage, avatar_url))
+          .then((url) => {
+              setAvatar(url);
+              updateProfile(auth.currentUser, {photoURL : url})
+              console.log(url)
+          })
+          .catch((err) => {
+              console.error(err);
+          });
+
+        }
+
+
+        // Storage.put((user + ".jpeg"), file, {
+        //     level: "protected",
+        //     contentType: "image/jpeg"
+        // })
+        // .then(result => {
+        //     console.log(result)
+        //     setAvatar(user + ".jpeg");
+        //     console.log(avatar);
+        // })
+        // .catch(err => console.log(err));
 
     return(
         <Page>
@@ -131,7 +160,8 @@ export default function ProfilePage() {
                 </Line>
                 <Line>
                     <Title >Username:</Title>
-                    <TextField disabled style={styles.rightFloat} name="username" label={username} color="secondary" /><br /> <br />
+                    {/* <TextField disabled style={styles.rightFloat} name="username" label={userdata.username} color="secondary" /><br /> <br /> */}
+                    <TextField disabled style={styles.rightFloat} name="username" label={"placeholder"} color="secondary" /><br /> <br />
                 </Line>
                 <Line>
                     <Title >Email:</Title>

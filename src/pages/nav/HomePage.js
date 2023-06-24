@@ -42,9 +42,9 @@ export default function HomePage() {
             </p>
             <h3>How did you make this?</h3>
             <p>The front end of the web app is developped using ReactJs, all of the code for it can be 
-                found <a href="https://github.com/oates-matthew/yaffle">on my github.</a> The backend - the authentication, the databases and the logic, is 
-                all done through Amazon Web Services. The source where Yaffle gets its league data from is
-                 called <a href="https://www.api-football.com/">API-football</a>, which is a great resource and completely free.</p>
+                found <a href="https://github.com/oates-matthew/yaffle">on my github.</a> The backend is 
+                all done through Google Firebase. The source where Yaffle gets its league data from is
+                 called <a href="https://www.api-football.com/">API-football</a>, which is a great resource and entirely free.</p>
       </Page>
       );
 }

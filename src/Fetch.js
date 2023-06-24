@@ -2,17 +2,12 @@ import request from "request";
 import * as subscriptions from './graphql/subscriptions.js';
 import * as mutations from './graphql/mutations.js';
 import * as queries from './graphql/queries.js'
-import { Amplify, API } from 'aws-amplify'
+
 
 const LEAGUE_IDS = [179, 39, 180, 40, 135, 61, 78, 140]
 const SEASON = 2022
 
 
-//   const configuration: ConfigurationOptions = {
-//     region: 'us-east-1',
-//     secretAccessKey: 'AKIASVGKFLHNDIOBGIQE',
-//     accessKeyId: 'luI54QrWY2S/ehRODiO3zaweXIV47OpLRdeEkk+Q'
-// }
 const appConfig = {
 
     'aws_appsync_graphqlEndpoint': 'https://4sr3ibm675hz3jzjercyjute7m.appsync-api.us-east-1.amazonaws.com/graphql',
@@ -35,6 +30,7 @@ const callAPI = async function(league){
         var options = {
             method: 'GET',
             url: URL,
+            
             qs: {league: league, season: SEASON},
             headers: headers
           };

@@ -2,7 +2,7 @@ import Page from '../../components/Page';
 import {Accordion, AccordionSummary, AccordionDetails, Icon} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import { DynamoDBClient, BatchGetItemCommand } from "@aws-sdk/client-dynamodb";
+
 // import request from "request";
 
 // import fetch from 'node-fetch';

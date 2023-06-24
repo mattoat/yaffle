@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import AppMenu from './AppMenu';
 import { useState, useContext, useEffect } from 'react';
 import {AvatarContext} from '../App';
+import {ProfilePicture} from '../components/firebase/ProfilePicture'
 
 const logo = "/assets/FullLogoWhite.svg";
 
@@ -129,7 +130,8 @@ const AppNavBar = (props) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar src={avatar} alt="User settings" />
+                {/* <Avatar src={avatar} alt="User settings" /> */}
+                {ProfilePicture()}
               </IconButton>
             </Tooltip>
             <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />

@@ -1,7 +1,4 @@
-import Amplify, {Auth, Storage} from 'aws-amplify';
-import awsconfig from './aws-exports.js';
-
-import React, {useContext} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 
 import Layout from'./pages/nav/Layout';
 import RulesPage from './pages/nav/RulesPage';
@@ -15,24 +12,30 @@ import Authenticator from './pages/auth/Authenticator';
 import {Routes, Route, Navigate, useLocation} from 'react-router-dom';
 import ForgotPassword from './pages/auth/ForgotPassword';
 
-import {UserDataContext, UsernameContext} from './App';
+import {UserDataContext} from './App';
 
-Amplify.configure(awsconfig);
-
-Storage.configure({track:true, level:'protected'});
   
-export default function RouterComponent(props) {
+export default function RouterComponent() {
 
-  const {username, setUsername} = useContext(UsernameContext);
+  const {userData, setUserData} = useContext(UserDataContext);
+  
+
 
   function RequireAuth(props) {
 
-    let location = useLocation();
-      if(username != null) {
-        return props.children;
-      }
+    let user = userData;
+
+
+    if (user != null) {
+      // User is signed in.
+    return props.children;
+
+    } else {
+      // No user is signed in.
       return <Navigate push to="/login"/>;
     }
+  }
+
   return(
       <div>
       {(

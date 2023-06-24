@@ -2,13 +2,13 @@ import { TextField, Button, LinearProgress, Card, Alert} from '@mui/material';
 import Page from '../../components/Page'
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
-import { Auth } from 'aws-amplify';
+import Firebase from "../../components/firebase/Firebase"
 
 import {styles} from '../../styles/styles'
 
 
 export default function ForgotPassword() {
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [authCode, setAuthCode] = useState('')
     const [error, setError] = useState("")
     const [newPassword1, setNewPassword1] = useState('')
@@ -21,32 +21,19 @@ export default function ForgotPassword() {
         
     async function forgotPassword() {
         setLoading(true)
-        try{
-            await Auth.forgotPassword(username)
-            setStage(2)
-        }
-        catch(err) {
-            setError(err + "")
-            console.log('error giving username: ', err)
-        }
+        Firebase.app.doPasswordReset(email)
         setLoading(false)
     }
 
 
-    async function newPassword() {
-        setLoading(true)
+    const newPassword = (e) => {
+
+        e.preventDefault();
+
         if(newPassword1 === newPassword2 !== '') {
-            try{
-                await Auth.forgotPasswordSubmit(username, authCode, newPassword2)
-
-                let from = location.state?.from?.pathname || "/login";
-                navigate(from, { replace: true });
-            }
-            catch(err) {
-                console.log('error submitting new password: ', err)
-                setError(err + "")
-
-            }
+            setLoading(true)
+            
+            //reset password
             setLoading(false)
         }
         else {setStage(3)}
@@ -59,11 +46,11 @@ export default function ForgotPassword() {
                 <div>
                     <h2>Forgot Password.</h2>
                     <TextField 
-                    onChange={evt => setUsername(evt.target.value)} 
-                    helperText="Please enter your username for your account." 
-                    name="username" 
-                    type="username" 
-                    label="Username" 
+                    onChange={evt => setEmail(evt.target.value)} 
+                    helperText="Please enter the email associated with your account." 
+                    name="email" 
+                    type="email" 
+                    label="Email" 
                     color="secondary" 
                     /><br /> <br />
                     <Button onClick={forgotPassword} color='secondary' variant="contained">Forgot Password</Button> <br /> <br />
@@ -72,7 +59,7 @@ export default function ForgotPassword() {
             {(stage == 2) && (
                 <div>
                     <h2>Forgot Password.</h2>
-                    <form >
+                    <form onSubmit={newPassword}>
                         <TextField 
                         onChange={evt => setAuthCode(evt.target.value)} 
                         // helperText="Please enter the confirmation code sent in your email." 
