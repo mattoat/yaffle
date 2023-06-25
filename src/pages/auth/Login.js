@@ -4,7 +4,7 @@ import { useLocation, useNavigate, Navigate, Redirect , Route } from 'react-rout
 import React, { useEffect, useContext, useState } from 'react';
 import {  signInWithEmailAndPassword, getAuth} from 'firebase/auth';
 import {styles} from '../../styles/styles';
-import {UserDataContext} from '../../App';
+import {SetUserDataContext, UserDataContext} from '../../App';
 import Firebase from '../../components/firebase/Firebase';
 
 function Login () {
@@ -17,7 +17,8 @@ function Login () {
     }
 
     const userData = useContext(UserDataContext);
-
+    const setUserData = useContext(SetUserDataContext);
+    
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [creds, setCreds] = useState(initialCreds);

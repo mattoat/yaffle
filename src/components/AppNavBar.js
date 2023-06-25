@@ -9,7 +9,8 @@ import { Link, useLocation } from 'react-router-dom';
 import AppMenu from './AppMenu';
 import { useState, useContext, useEffect } from 'react';
 import {AvatarContext} from '../App';
-import {ProfilePicture} from '../components/firebase/ProfilePicture'
+import {getProfilePicture} from '../components/firebase/ProfilePicture'
+import { UserDataContext } from '../App';
 
 const logo = "/assets/FullLogoWhite.svg";
 
@@ -23,7 +24,7 @@ function HideOnScroll(props) {
   const trigger = useScrollTrigger({
     target: window ? window() : undefined,
   });
-
+  
   return (
     <Slide appear={false} direction="down" in={!trigger}>
       {children}
@@ -35,8 +36,17 @@ function HideOnScroll(props) {
 const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-
+  const [profilePic, setProfilePic] = useState('/assets/avatar.png');
   const {avatar, setAvatar} = useContext(AvatarContext);
+
+  const {userData, setUserData} = useContext(UserDataContext);
+
+  useEffect(() => {
+    // Fetch the profile picture from local storage or Firebase
+    setProfilePic(getProfilePicture(userData));
+  }, []);
+
+  // const {avatar, setAvatar} = useContext(AvatarContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -129,9 +139,10 @@ const AppNavBar = (props) => {
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} style={{"overflow":"hidden"}} sx={{ p: 0 }}>
                 {/* <Avatar src={avatar} alt="User settings" /> */}
-                {ProfilePicture()}
+                {/* {ProfilePicture(true)} */}
+                <img src={avatar} width ='50px' style={{"border":"1px solid #166924"}}/>
               </IconButton>
             </Tooltip>
             <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />

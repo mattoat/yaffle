@@ -2,6 +2,7 @@ import {initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider,
   sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail} from 'firebase/auth';
 import {getStorage} from 'firebase/storage';
+import {getFirestore} from 'firebase/firestore';
 import 'firebase/database';
 
 const config = {
@@ -9,17 +10,19 @@ const config = {
   authDomain: "yaffle-d76fe.firebaseapp.com",
   databaseURL: "https://yaffle-d76fe-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "yaffle-d76fe",
-  storageBucket: "gs://yaffle-d76fe.appspot.com/",
+  storageBucket: "yaffle-d76fe.appspot.com",
   messagingSenderId: "1040602701618",
   appId: "1:1040602701618:web:d313a148f534e4c3d3412b",
   measurementId: "G-L48BQHY8B6"
 };
+
 
 class Firebase {
   constructor() {
 
     this.app = initializeApp(config);
 
+    this.db = getFirestore(this.app);
 
 
     /* Helper */

@@ -1,38 +1,67 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {getAuth} from 'firebase/auth';
-import {getStorage, ref, getDownloadURL} from 'firebase/storage';
+import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage';
 import {Avatar} from '@mui/material';
-import { UserDataContext } from '../../App';
+import { getAuth, updateProfile} from 'firebase/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { AvatarContext, UserDataContext } from '../../App';
 
-export function ProfilePicture(props) {
-  const [profilePic, setProfilePic] = useState('');
+let profileURL = '';
 
-  const {userData, setUserData} = useContext(UserDataContext);
 
-  let pic = null;
+export function getProfilePicture() {
 
-  // check if image is in local storage
-  if (localStorage.getItem('profilePic')) {
-    pic = localStorage.getItem('profilePic');
-    console.log("Url = " + pic)
-  } else {
-    // if not in local storage, fetch from firebase
 
-    if (userData.photoURL != null) {
-        // if url is in user credentials
-        const url = userData.photoURL;
-        console.log(url)
-        localStorage.setItem('profilePic', url)
+    let auth = getAuth();
+
+    if (auth.currentUser == null) {
+        return "/assets/avatar.png";
     }
-    else {
-        // not in user credentials so return default
-        return <AccountCircleIcon />
+    if (profileURL != '') {
+        return profileURL;
     }
-    let pic = localStorage.getItem('profilePic');
-    setProfilePic(pic);
+    else if (localStorage.getItem('profilePic')){
+         return localStorage.getItem('profilePic');
+    }
+    else if (Object.keys(auth.currentUser).includes("photoURL")
+     && auth.currentUser.photoURL != null ) {
+        return auth.currentUser.photoURL;
+    }
+    return "/assets/avatar.png";
 }
 
-  // return an img element with the profile picture as the source
-  return <Avatar src={pic} alt="User settings" />;
+export async function setProfilePicture(file, callback) {
+
+    let auth = getAuth();
+
+    let userData = auth.currentUser;
+
+    const storage = getStorage();
+          
+    let avatar_url = "profilepics/" + userData.uid + ".png";
+    console.log(avatar_url);
+    const reference = ref(storage, avatar_url);
+
+    const uploadTask = uploadBytesResumable(reference, file);
+
+    uploadTask.then((url) => {
+
+
+        // localStorage.removeItem('profilePic');
+        
+        getDownloadURL(ref(storage, avatar_url))
+        .then((url) => {
+            updateProfile(auth.currentUser, {photoURL : url})
+            
+            localStorage.setItem("profilePic", url);
+
+            console.log("Uploaded successfully");
+            console.log("New url: " + url);
+            profileURL = url;
+            callback(url);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+        
+    });
 }

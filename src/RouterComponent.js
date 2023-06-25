@@ -12,12 +12,13 @@ import Authenticator from './pages/auth/Authenticator';
 import {Routes, Route, Navigate, useLocation} from 'react-router-dom';
 import ForgotPassword from './pages/auth/ForgotPassword';
 
-import {UserDataContext} from './App';
+import {UserDataContext, SetUserDataContext} from './App';
 
   
 export default function RouterComponent() {
 
-  const {userData, setUserData} = useContext(UserDataContext);
+  const {userData} = useContext(UserDataContext);
+
   
 
 

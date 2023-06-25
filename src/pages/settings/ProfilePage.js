@@ -4,13 +4,17 @@ import React, { useEffect, useState, useContext } from 'react';
 import Page from '../../components/Page';
 import styled from '@emotion/styled';
 import { styles } from '../../styles/styles'; //styles={styles.alignLeft}
-import { Avatar , Card, TextField, Button, LinearProgress, Alert,Table,TableBody,TableContainer,TableRow,TableCell,Paper,TableHead} from '@mui/material';
+import { Avatar , Card, TextField, Button, LinearProgress, Alert,Table,TableBody,TableContainer,Modal,TableRow,TableCell,Paper,TableHead, CircularProgress} from '@mui/material';
 import imageCompression from 'browser-image-compression';
+import { green } from '@mui/material/colors';
 
 import {UserDataContext, AvatarContext} from '../../App';
 import { getStorage, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import {getAuth, updateProfile} from 'firebase/auth';
+import {getAuth, updateProfile, onAuthStateChanged} from 'firebase/auth';
+import {getFirestore, doc, getDoc} from 'firebase/firestore';
 import { CoPresent } from '@mui/icons-material';
+import Firebase from '../../components/firebase/Firebase.js';
+import { getProfilePicture, setProfilePicture } from '../../components/firebase/ProfilePicture.js';
 
 
 
@@ -42,6 +46,7 @@ const PictureFrame = styled.div`
         opacity: 40%; 
         cursor: pointer;
       }
+      
 `
 
 const imgStyle = {
@@ -53,8 +58,8 @@ const imgStyle = {
 export default function ProfilePage() {
     
     const [loading, setLoading] = useState(false)
-    const [name, setName] = useState("")
-    const [user, setUser] = useState("")
+    const [displayName, setDisplayName] = useState("")
+    const [username, setUserName] = useState("")
     const [email, setEmail] = useState("")
     const [error, setError] = useState("")
 
@@ -64,10 +69,29 @@ export default function ProfilePage() {
 
     const getUser = () => {
 
-        setName(userData.displayName);
+        setDisplayName(userData.displayName);
         setEmail(userData.email);
-        setUser(userData.uid);
-        setAvatar(userData.photoURL);
+        setUserName(userData.username);
+        // setAvatar(userData.photoURL);
+
+        const db = getFirestore(Firebase.app);
+
+        const reference = doc(db, 'usersCollection/' + userData.uid);
+
+        getDoc(reference).then((docSnap) => {
+
+            if (docSnap.exists()) {
+                const extraData = docSnap.data();
+
+                setUserName(extraData.username);
+                setDisplayName(extraData.displayName);
+
+            }
+            else {
+                console.log("No data")
+            }
+        })
+
 
         // The user object has basic properties such as display name, email, etc.
         
@@ -75,7 +99,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         getUser();
-    }, [])
+    }, []);
 
     let fileInput = React.createRef();
 
@@ -100,68 +124,61 @@ export default function ProfilePage() {
           } catch (error) {
             console.log(error);
           }
-        
-          // UPLOAD PICTURE TO FIREBASE
-          const storage = getStorage();
-          
-          let avatar_url = "profilepics/" + userData.uid + ".png";
-          console.log(avatar_url);
-          const reference = ref(storage, avatar_url);
 
           setLoading(true);
-          const uploadTask = uploadBytesResumable(reference, file);
-          setLoading(false);
-          console.log("Complete");
-
-          let auth = getAuth();
-
-          
-          getDownloadURL(ref(storage, avatar_url))
-          .then((url) => {
+          // UPLOAD PICTURE TO FIREBASE
+          setProfilePicture(file, (url) => {
+              
+              console.log(url);
               setAvatar(url);
-              updateProfile(auth.currentUser, {photoURL : url})
-              console.log(url)
-          })
-          .catch((err) => {
-              console.error(err);
-          });
-
+            });  
+        setLoading(false);
         }
 
-
-        // Storage.put((user + ".jpeg"), file, {
-        //     level: "protected",
-        //     contentType: "image/jpeg"
-        // })
-        // .then(result => {
-        //     console.log(result)
-        //     setAvatar(user + ".jpeg");
-        //     console.log(avatar);
-        // })
-        // .catch(err => console.log(err));
 
     return(
         <Page>
             <h1>Profile</h1>
             <Card style={styles.cardStyle}>
                 <PictureFrame >
-                    <input
-                        type="file"
-                        accept="image/*" 
-                        onChange={onProcessFile}
-                        ref={fileInput}
-                        hidden={true}
+                    {(loading) && (
+                        <Modal
+                        open={true}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                            <CircularProgress
+                            size={24}
+                            sx={{
+                            color: green[500],
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            marginTop: '-12px',
+                            marginLeft: '-12px',
+                            }}
                         />
-                    <Avatar src={avatar} style={imgStyle} onClick={onOpenFileDialog}/>
+                        </Modal>
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*" 
+                            onChange={onProcessFile}
+                            ref={fileInput}
+                            hidden={true}
+                            />
+                    {/* <Avatar src={avatar} style={imgStyle} onClick={onOpenFileDialog}/> */}
+                    <img width="max-content" height="max-content" onClick={onOpenFileDialog} src={avatar} width='100%'height='auto' />;
+
                 </PictureFrame>
                 <Line>
                     <Title >Full name: </Title> 
-                    <TextField style={styles.rightFloat} name="name" label={name} color="secondary" /><br /> <br />
+                    <TextField style={styles.rightFloat} name="name" label={displayName} color="secondary" /><br /> <br />
                 </Line>
                 <Line>
                     <Title >Username:</Title>
                     {/* <TextField disabled style={styles.rightFloat} name="username" label={userdata.username} color="secondary" /><br /> <br /> */}
-                    <TextField disabled style={styles.rightFloat} name="username" label={"placeholder"} color="secondary" /><br /> <br />
+                    <TextField disabled style={styles.rightFloat} name="username" label={username} color="secondary" /><br /> <br />
                 </Line>
                 <Line>
                     <Title >Email:</Title>

@@ -1,35 +1,46 @@
 import { TextField, Button, Card, LinearProgress, Alert } from '@mui/material';
 import {styles} from '../../styles/styles'
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useNavigate, useLocation, Navigate} from 'react-router-dom';
-import {createUserWithEmailAndPassword} from "firebase/auth";
+import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from "firebase/auth";
 import Firebase from '../../components/firebase/Firebase';
-
+import {getAuth} from 'firebase/auth';
+import {UserDataContext} from '../../App';
 
 function Register (){
 
-
-    const auth = Firebase.auth;
+    const auth = getAuth();
+    const {userData, setUserData} = useContext(UserDataContext);
 
     const initialCreds = {
         name: '',
         username: '',
         password: '',
         email: '',
-        authCode: '',
     }
     const [loading, setLoading] = useState(false)
     const [signedIn, setSignedIn] = useState(false)
     const [creds, setCreds] = useState(initialCreds)
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
+    const [stage, setStage] = useState(0); // 0 for unregistered, 1 for unverified, 2 for verified
 
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
       
     }
 
-    let navigate = useNavigate();
     let location = useLocation();
+    useEffect(() => {
+
+        if(userData != null) {
+            const { from } = location.state || {
+                from: {
+                    pathname: '/'
+                }
+            }
+        }
+    }, []);
+
     const { from } = location.state || {
         from: {
           pathname: '/'
@@ -38,8 +49,13 @@ function Register (){
     async function signUp () {
         setLoading(true); 
         const {name, username, password, email} = creds
-        console.log(username + " " + password + " " + email)
+        console.log(creds)
             createUserWithEmailAndPassword(auth, email, password).then((user) => {
+
+                updateProfile(auth.currentUser, {displayName : name});
+
+                sendEmailVerification(auth.currentUser);
+                setStage(1);
 
                 console.log(user);
             }).catch((error) => {
@@ -62,20 +78,35 @@ function Register (){
                     />
                 )}  
                 <div>
-                    <h2>Register.</h2>
-                    <TextField onInput={evt => onChange('name', evt.target.value)} name="name" label="Full Name" color="secondary" /><br /> <br />
-                    <TextField onInput={evt => onChange('username', evt.target.value)}autoComplete='username' name="username" label="Username" color="secondary" /><br /> <br />
-                    <TextField 
-                        name="password"
-                        onChange={evt => onChange('password', evt.target.value)}
-                        id="outlined-password-input"
-                        label="Password"
-                        type="password"
-                        color="secondary"
-                        autoComplete="current-password"
-                    /><br /> <br />
-                    <TextField onInput={evt => onChange('email', evt.target.value)} name="email" label="Email" color="secondary" /><br /> <br />
-                    <Button onClick={signUp} color="secondary" variant="contained">Sign Up</Button> <br /><br />
+                    {(stage == 0 ) && (
+                        <div>
+                            <h2>Register.</h2>
+                            
+                            <TextField onInput={evt => onChange('name', evt.target.value)} name="name" label="Full Name" color="secondary" /><br /> <br />
+                            <TextField onInput={evt => onChange('username', evt.target.value)} autoComplete='username' name="username" label="Username" color="secondary" /><br /> <br />
+                            <TextField onInput={evt => onChange('email', evt.target.value)} name="email" label="Email" color="secondary" /><br /> <br />
+                            <TextField 
+                                name="password"
+                                onChange={evt => onChange('password', evt.target.value)}
+                                id="outlined-password-input"
+                                label="Password"
+                                type="password"
+                                color="secondary"
+                                autoComplete="current-password"
+                            /><br /> <br />
+                            <Button onClick={signUp} color="secondary" variant="contained">Sign Up</Button> <br /><br />
+                        </div>
+                    )
+                    }
+                    {(stage == 1 ) && (
+                        <div>
+                            <h2>Verify your email before signing in.</h2>
+                            <br></br>
+                            <p>We have sent you an email to confirm your email address. Please click the link to complete registration. It should arrive in your inbox within the next couple minutes.</p>
+                        </div>
+                    )
+                    }
+                            
                 </div>
             {loading && (<LinearProgress color="secondary" />)}
             {(error !== '') && (<Alert onClick={() => setError("")} severity="error">{error}</Alert>)}
