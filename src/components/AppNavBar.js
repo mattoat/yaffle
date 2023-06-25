@@ -69,7 +69,7 @@ const AppNavBar = (props) => {
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             <Link to="/">
-              <img src={logo} width="100em" alt="Yaffle"/>
+              <img src={logo} style={{"marginTop":"10px"}} width="100em" alt="Yaffle"/>
             </Link>
           </Typography>
 

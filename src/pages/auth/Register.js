@@ -49,20 +49,17 @@ function Register (){
     async function signUp () {
         setLoading(true); 
         const {name, username, password, email} = creds
-        console.log(creds)
             createUserWithEmailAndPassword(auth, email, password).then((user) => {
-
                 updateProfile(auth.currentUser, {displayName : name});
-
                 sendEmailVerification(auth.currentUser);
                 setStage(1);
-
-                console.log(user);
             }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode + ": " + errorMessage);
-            console.log(error);
+                const errorCode = error.code;
+                switch (errorCode){
+                    case "auth/email-already-in-use":
+                        setError("There is already an account with that email address, please sign in with that account, or register with a different email address.");
+                    break;
+        }
         });
         
         setLoading(false); 

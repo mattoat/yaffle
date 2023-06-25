@@ -3,6 +3,7 @@ import Page from '../../components/Page'
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
 import Firebase from "../../components/firebase/Firebase"
+import {sendPasswordResetEmail, getAuth} from 'firebase/auth';
 
 import {styles} from '../../styles/styles'
 
@@ -14,14 +15,29 @@ export default function ForgotPassword() {
     const [newPassword1, setNewPassword1] = useState('')
     const [newPassword2, setNewPassword2] = useState('')
     const [loading, setLoading] = useState(false)
-    const [stage, setStage] = useState(1) // 1 for username, 2 for confirmation code, 3 for not matching passwords
-
+    const [stage, setStage] = useState(1) // 1 for username, 2 for sent
     let navigate = useNavigate();
     let location = useLocation();
+    const auth = getAuth();
         
+    async function routeChange() {
+        let path = `/login`; 
+        navigate(path, {replace: true});
+    }
+
     async function forgotPassword() {
         setLoading(true)
-        Firebase.app.doPasswordReset(email)
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            // Password reset email sent!
+            setStage(2);
+            // ..
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        });
         setLoading(false)
     }
 
@@ -59,64 +75,13 @@ export default function ForgotPassword() {
             {(stage == 2) && (
                 <div>
                     <h2>Forgot Password.</h2>
-                    <form onSubmit={newPassword}>
-                        <TextField 
-                        onChange={evt => setAuthCode(evt.target.value)} 
-                        // helperText="Please enter the confirmation code sent in your email." 
-                        name="authCode" 
-                        autoComplete="randomstring"
-                        label="authCode" 
-                        color="secondary" 
-                        /><br /> <br />
-                        <TextField  
-                        onChange={evt => setNewPassword1(evt.target.value)} 
-                        // helperText="Please enter your new password for your account." 
-                        name="password" 
-                        type="password" 
-                        label="Password" 
-                        color="secondary" 
-                        /><br /> <br />
-                        <TextField 
-                        onChange={evt => setNewPassword2(evt.target.value)} 
-                        // helperText="Please confirm your new password for your account." 
-                        name="password" 
-                        type="password" 
-                        label="Password" 
-                        color="secondary" 
-                        /><br /> <br />
-                        <Button onClick={newPassword} color='secondary' variant="contained">Submit New Password</Button> <br /> <br />
-                    </form>
-                </div>
-            )}{(stage == 3) && (
-                <div>
-                    <h2>Forgot Password.</h2>
-                    <TextField 
-                    onChange={evt => setAuthCode(evt.target.value)} 
-                    helperText="Please enter the confirmation code sent in your email." 
-                    name="authCode" 
-                    type="authCode" 
-                    label="authCode" 
-                    color="secondary" 
-                    /><br /> <br />
-                    <TextField  
-                    onChange={evt => setNewPassword1(evt.target.value)} 
-                    error
-                    helperText="Please ensure your new password matches." 
-                    name="password" 
-                    type="password" 
-                    label="Password" 
-                    color="secondary" 
-                    /><br /> <br />
-                    <TextField 
-                    onChange={evt => setNewPassword2(evt.target.value)} 
-                    error
-                    helperText="Please ensure your new password matches." 
-                    name="password" 
-                    type="password" 
-                    label="Password" 
-                    color="secondary" 
-                    /><br /> <br />
-                    <Button onClick={newPassword} color='secondary' variant="contained">Submit New Password</Button> <br /> <br />
+                    <br />
+                    <p>We have sent a recovery email to the address <strong>{email}</strong>.</p>
+                    <p>It should arrive in your inbox in the next couple minutes. </p>
+                    <Button onClick={forgotPassword} color='secondary' variant='contained'>Resend Email?</Button>
+                    <br /><br />
+                    <Button onClick= {routeChange} color="secondary" variant="text">Back to login.</Button>
+                    
                 </div>
             )}
             {loading && (<LinearProgress color="secondary" />)}

@@ -56,7 +56,6 @@ function Login () {
     const onLogin = (e) => {
         // const app = Firebase.app;
         const auth = getAuth();
-        console.log(auth)
         setLoading(true); 
         e.preventDefault();
 
@@ -69,11 +68,18 @@ function Login () {
             
             setSignedIn(true);
         })
-        .catch((error) => {
+        .catch((err) => {
 
-            console.log('errror signing in...: ', error)
-            setError(error + "")
-        })
+            switch(err.code){
+                case "auth/user-not-found":
+                case "auth/invalid-password":
+
+                    setError("Username or password incorrect.")
+                    break;
+                default:
+                    setError(err.message);
+            }
+        });
         setLoading(false); 
     }
     
@@ -102,7 +108,7 @@ function Login () {
                 <Button onClick={onLogin} color='secondary' variant="contained">Log In</Button> <br /> <br />
                 <Button onClick= {routeChange} color="secondary" variant="text">Forgot Password?</Button><br /><br />
                 {loading && (<LinearProgress color="secondary" />)}
-                {(error !== '') && (<Alert severity="error">{error}</Alert>)}
+                {(error !== '') && (<Alert onClick={() => setError("")} severity="error">{error}</Alert>)}
             </Card>
         </div>
     );
