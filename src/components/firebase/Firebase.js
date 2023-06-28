@@ -2,8 +2,7 @@ import {initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider,
   sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail} from 'firebase/auth';
 import {getStorage} from 'firebase/storage';
-import {getFirestore} from 'firebase/firestore';
-import 'firebase/database';
+import {getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager} from 'firebase/firestore';
 
 const config = {
   apiKey: "AIzaSyAOmL5cu9pWw_PwqEMfCqKlnZ0xYhT4Jns",
@@ -22,7 +21,12 @@ class Firebase {
 
     this.app = initializeApp(config);
 
-    this.db = getFirestore(this.app);
+    // this.db = getFirestore(this.app);
+
+    initializeFirestore(this.app, 
+      {localCache: 
+        persistentLocalCache(/*settings*/{tabManager: persistentMultipleTabManager()})
+      });
 
 
     /* Helper */

@@ -76,6 +76,8 @@ function Login () {
 
                     setError("Username or password incorrect.")
                     break;
+                case "auth/invalid-email":
+                    setError("Invalid email address.")
                 default:
                     setError(err.message);
             }

@@ -1,13 +1,13 @@
 {
     "leagues":[
-        {"id": 179, "name" : "Scottish Premiership", "table":"League1-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 39, "name" : "English Premier League", "table":"League2-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 180, "name" : "Scottish Championship", "table":"League3-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 40, "name" : "English Championship", "table":"League4-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 140, "name" : "La Liga", "table":"League5-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 78, "name" : "Bundesliga", "table":"League6-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 135, "name" : "Serie A", "table":"League7-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"},
-        {"id": 61, "name" : "Ligue 1", "table":"League8-pu7v3rcv7nbyrdamyyc5xmr3ri-dev"}
+        {"id": 179, "name" : "Scottish Premiership"},
+        {"id": 39, "name" : "English Premier League"},
+        {"id": 180, "name" : "Scottish Championship"},
+        {"id": 40, "name" : "English Championship"},
+        {"id": 140, "name" : "La Liga"},
+        {"id": 78, "name" : "Bundesliga"},
+        {"id": 135, "name" : "Serie A"},
+        {"id": 61, "name" : "Ligue 1"}
     ],
-    "season":2021
+    "season":2022
 }

@@ -1,5 +1,3 @@
-
-import awsconfig from '../../aws-exports.js';
 import React, { useEffect, useState, useContext } from 'react';
 import Page from '../../components/Page';
 import styled from '@emotion/styled';
@@ -10,11 +8,10 @@ import { green } from '@mui/material/colors';
 
 import {UserDataContext, AvatarContext} from '../../App';
 import { getStorage, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import {getAuth, updateProfile, onAuthStateChanged} from 'firebase/auth';
 import {getFirestore, doc, getDoc} from 'firebase/firestore';
-import { CoPresent } from '@mui/icons-material';
+
 import Firebase from '../../components/firebase/Firebase.js';
-import { getProfilePicture, setProfilePicture } from '../../components/firebase/ProfilePicture.js';
+import { setProfilePicture } from '../../components/firebase/ProfilePicture.js';
 
 
 
