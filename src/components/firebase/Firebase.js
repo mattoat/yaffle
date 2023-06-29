@@ -4,8 +4,8 @@ import {getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider,
 import {getStorage} from 'firebase/storage';
 import {getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager} from 'firebase/firestore';
 
-const config = {
-  apiKey: "AIzaSyAOmL5cu9pWw_PwqEMfCqKlnZ0xYhT4Jns",
+export const config = {
+  apiKey: "AIzaSyCaIL5pZBlsrynDX6CJzi21uVKvC-A-6gw",
   authDomain: "yaffle-d76fe.firebaseapp.com",
   databaseURL: "https://yaffle-d76fe-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "yaffle-d76fe",

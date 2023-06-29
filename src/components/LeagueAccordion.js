@@ -10,11 +10,12 @@ import { themeOptions } from '../styles/theme';
 const LeagueAccordion = ( data ) => {
   const [expanded, setExpanded] = useState(false);
   const [leagueData, setLeagueData] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const db = getFirestore();
   const BADGEURL = "https://media.api-sports.io/football/";
   const docs = [];
+  const TTL = 86400000 // 24 hours
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,11 +36,9 @@ const LeagueAccordion = ( data ) => {
       border: 0,
     },
   }));
-  
-  
-  const handleChange = async (event, isExpanded) => {
-    setExpanded(isExpanded);  
-    setLoading(true);  
+
+  const getLeagueData = async () => {
+
     const leagueReference = collection(db, "league" + data.id);
     const q = query(leagueReference, orderBy("Rank", "asc"));
 
@@ -47,10 +46,37 @@ const LeagueAccordion = ( data ) => {
 
     querySnapshot.forEach((doc) => {
         docs[doc.data().Rank - 1] = doc.data();
-        console.log(doc.data());
     });
     // docs = Object.values(docs);
+    const timestamp = new Date()
+    const utc_timestamp = timestamp.getTime();
+    const obj = {"timestamp": utc_timestamp, "content": docs};
+    localStorage.setItem("league" + data.id, JSON.stringify(obj));
     setLeagueData(docs);
+  }
+  
+  
+  const handleChange = async (event, isExpanded) => {
+    setExpanded(isExpanded);  
+    // setLoading(true);  
+    console.log(loading);
+    if(!expanded) {
+
+        const now = new Date().getTime();
+        if (localStorage.getItem("league" + data.id)) {
+            if (localStorage.getItem("league" + data.id).timestamp >= now - TTL) {
+                const cachedLeagueData = localStorage.getItem("league" + data.id).content;
+                setLeagueData(cachedLeagueData);
+            }
+            else {
+                localStorage.removeItem("league" + data.id);
+            }
+        }
+        else {
+            console.log("Fetching from db")
+            getLeagueData();
+        }
+    }
     setLoading(false);
   }
   // if on mobile will return true

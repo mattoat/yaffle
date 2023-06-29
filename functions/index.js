@@ -15,7 +15,7 @@ const logger = functions.logger;
 const db = admin.firestore();
 
 const LEAGUEIDS = [179, 39, 180, 40, 135, 61, 78, 140];
-const SEASON = 2022;
+const SEASON = 2023;
 
 const callAPI = async (leagueIndex) => {
   const URL = "https://v3.football.api-sports.io/standings?league=" + LEAGUEIDS[leagueIndex] + "&season=" + SEASON;
