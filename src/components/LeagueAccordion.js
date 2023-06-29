@@ -10,7 +10,7 @@ import { themeOptions } from '../styles/theme';
 const LeagueAccordion = ( data ) => {
   const [expanded, setExpanded] = useState(false);
   const [leagueData, setLeagueData] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const db = getFirestore();
   const BADGEURL = "https://media.api-sports.io/football/";
@@ -38,6 +38,7 @@ const LeagueAccordion = ( data ) => {
   }));
 
   const getLeagueData = async () => {
+    setLoading(true);
 
     const leagueReference = collection(db, "league" + data.id);
     const q = query(leagueReference, orderBy("Rank", "asc"));
@@ -53,31 +54,35 @@ const LeagueAccordion = ( data ) => {
     const obj = {"timestamp": utc_timestamp, "content": docs};
     localStorage.setItem("league" + data.id, JSON.stringify(obj));
     setLeagueData(docs);
+    setLoading(false);
+    console.log(loading);
   }
   
   
   const handleChange = async (event, isExpanded) => {
     setExpanded(isExpanded);  
-    // setLoading(true);  
-    console.log(loading);
+    setLoading(true);  
     if(!expanded) {
+        if (localStorage.getItem("league" + data.id) != null) {
 
-        const now = new Date().getTime();
-        if (localStorage.getItem("league" + data.id)) {
-            if (localStorage.getItem("league" + data.id).timestamp >= now - TTL) {
-                const cachedLeagueData = localStorage.getItem("league" + data.id).content;
+            const now = new Date().getTime();
+            const then = parseInt(JSON.parse(localStorage.getItem("league" + data.id)).timestamp);
+
+            // If then is greater than now - TTL then the data is not stale, and can be used
+            if (then > now - TTL) {
+                const cachedLeagueData = JSON.parse(localStorage.getItem("league" + data.id)).content;
                 setLeagueData(cachedLeagueData);
             }
-            else {
+            else { // else the league data is stale and should be removed and fetched again
                 localStorage.removeItem("league" + data.id);
+                await getLeagueData();
             }
         }
-        else {
-            console.log("Fetching from db")
-            getLeagueData();
+        else { // if there is no data in the localStorage fetch
+            await getLeagueData();
         }
+        setLoading(false);
     }
-    setLoading(false);
   }
   // if on mobile will return true
   const matches = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -89,10 +94,10 @@ const LeagueAccordion = ( data ) => {
         <img style={{"paddingLeft": "20px"}} height= "30px"  src= {BADGEURL + "leagues/" + data.id + ".png"} />
       </AccordionSummary>
       <AccordionDetails>
-        {loading ? 
+        {loading && 
           (<CircularProgress></CircularProgress>)
-         : 
-        //  ( <p>{JSON.stringify(leagueData)}</p>)
+        }
+        { !loading &&
         (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
