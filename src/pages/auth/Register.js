@@ -6,6 +6,7 @@ import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} fr
 import Firebase from '../../components/firebase/Firebase';
 import {getAuth} from 'firebase/auth';
 import {UserDataContext} from '../../App';
+import { doc, setDoc, getFirestore } from "firebase/firestore"; 
 
 function Register (){
 
@@ -27,6 +28,17 @@ function Register (){
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
       
+    }
+
+    async function setCompleteRegistration(userID) {
+        const db = getFirestore(Firebase.app);
+
+        await setDoc(doc(db, "usersCollection", userID), {
+            teamsSelected: false
+        });
+
+        
+
     }
 
     let location = useLocation();
@@ -53,12 +65,17 @@ function Register (){
                 updateProfile(auth.currentUser, {displayName : name});
                 sendEmailVerification(auth.currentUser);
                 setStage(1);
+
+                setCompleteRegistration(user.user.uid)
+
             }).catch((error) => {
                 const errorCode = error.code;
                 switch (errorCode){
                     case "auth/email-already-in-use":
                         setError("There is already an account with that email address, please sign in with that account, or register with a different email address.");
                     break;
+                    default:
+                        setError(error);
         }
         });
         

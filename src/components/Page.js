@@ -11,11 +11,13 @@ const Frame = styled.div`
 
 `
 const paperStyle = {
-    padding: '6%',
+    paddingTop: '6%',
+    paddingLeft: '6%',
+    paddingRight: '6%',
     backgroundColor: '#F9FBFF',
     textAlign:'center',
     marginBottom:'5%', 
-    display: 'flow-root'
+    display: 'grid'
   };
 
 export default function Page(props) {

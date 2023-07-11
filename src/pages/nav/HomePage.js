@@ -18,11 +18,10 @@ export default function HomePage() {
             <p>The game is deliberately designed to be 'light touch'. Unlike Fantasy Football games, once you have set up your teams you can 
                 sit back and watch yourself move up (or down) the leaderboard for the rest of the season if you don't want to spend too 
                 much time managing your teams. It is possible to win Yaffle if you chose this strategy, however if you want to try to improve 
-                your performance, you will also have the ability to substitute your teams throughout the season.</p>
+                your performance, you will also have the ability to substitute your teams during the season's transfer window.</p>
             <h3>This is all new to me, where did this come from</h3>
-            <p>Des Oates created, and ran yaffle since (at least) 2009, but the last season ran was in 2016. 
-                <a href="http://yaffle-2016.appspot.com/"> The website is still up and running.</a> Matthew has decided to pick it up and bring it 
-                back to life. </p>
+            <p>Des Oates created, and ran yaffle since (at least) 2009, but the last season ran was in 2016 (<a href="http://yaffle-2016.appspot.com/">The website is still partially running.</a>)
+             His son, Matthew Oates has decided to pick it up and bring it back to life. </p>
             <h3>How can I win Yaffle?</h3>
             <p>Once you have chosen your 8 teams, you will appear on the Yaffle leaderboard. Your total points score on the Yaffle 
                 leaderboard is the sum of all your teams current points total in their respective leagues.
@@ -36,16 +35,16 @@ export default function HomePage() {
                 <li>1st: 65% of the prize fund</li>
                 <li>2nd: 25% of the prize fund</li>
                 <li>3rd: 10% of the prize fund</li>
-            <p>There will also be a forfeit for the losing player, to be decided at one point in the season.</p>
+            <p>There will also be a forfeit for the losing player, to be decided at a later point in the season.</p>
             <h3>How do I join?</h3>
             <p>Register by clicking the top right button. You will be asked to register and select your eight teams, once you've done that, you're in. In the mean 
                 time, you can follow Yaffle twitter at <a href='https://twitter.com/yaffle2010'>@yaffle2010</a>.
             </p>
             <h3>How did you make this?</h3>
             <p>The front end of the web app is developped using React, all of the code for it can be 
-                found <a href="https://github.com/oates-matthew/yaffle">on my github.</a> The backend is
-                 through Google Firebase. Yaffle also relies on an API to obtain any football data.
-                 We would like to acknowledge <a href="https://www.api-football.com/">API-football</a>, which is a great resource and entirely free.</p>
+                found on my <a href="https://github.com/oates-matthew/yaffle">Github.</a> The backend is
+                 through Google Firebase. Yaffle also uses an API service to obtain all its football data.
+                 Huge appreciation for <a href="https://www.api-football.com/">API-football</a>, which is an entirely free and great resource that Yaffle relies on.</p>
       </Page>
       );
 }

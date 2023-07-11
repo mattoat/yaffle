@@ -15,7 +15,12 @@ const logger = functions.logger;
 const db = admin.firestore();
 
 const LEAGUEIDS = [179, 39, 180, 40, 135, 61, 78, 140];
-const SEASON = 2023;
+const SEASON = 2022;
+
+const capitalizeName = (str) => {
+  // return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  return str;
+};
 
 const callAPI = async (leagueIndex) => {
   const URL = "https://v3.football.api-sports.io/standings?league=" + LEAGUEIDS[leagueIndex] + "&season=" + SEASON;
@@ -82,7 +87,7 @@ const parseText = async (body, leagueIndex) => {
       Rank: i + 1,
       Played: playeds[i],
       Badge: badges[i],
-      Name: names[i],
+      Name: capitalizeName(names[i]),
       GF: gfs[i],
       GA: gas[i],
       GD: gds[i],

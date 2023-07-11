@@ -36,7 +36,7 @@ export default function Layout(props) {
       
   useEffect(() => {
     
-    if(userData != null) {
+    if(userData != null && userData.emailVerified) {
         updatePages(['rules', 'leaderboard', 'leagues'])
         updateSettings(['Profile', 'Log Out'])
     }

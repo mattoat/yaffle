@@ -8,9 +8,8 @@ export default function RulesPage() {
     return(
           <Page>
             <h1>Rules</h1>
-            <p>The rules are simple: Register, select your 8 clubs, and wait. If, in the January window, you realise you're 
-              actually not as good as you thought you would be and you're clubs are doing poorly, then you can substitute out as 
-              many of your teams as you'd like.
+            <p>The rules are simple: Register, select your 8 clubs, and wait. In the January transfer window, when you realise you're 
+              actually pretty poor at predicting winners, then you can substitute out as many of your teams as you wish.
             </p>
             <Card style={styles.card}>
               <img style={styles.img} src="./assets/VARref.gif"></img>
@@ -32,8 +31,6 @@ export default function RulesPage() {
                 </Box>
               </Box>
             </Card>
-            <h3>How do I select my teams?</h3>
-            <p>Go to account, and select your teams from there. Once that is done, you will be able to view the Yaffle leaderboard.</p>
           </Page>
       );
 }

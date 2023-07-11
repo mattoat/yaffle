@@ -13,6 +13,7 @@ import {Routes, Route, Navigate, useLocation} from 'react-router-dom';
 import ForgotPassword from './pages/auth/ForgotPassword';
 
 import {UserDataContext, SetUserDataContext} from './App';
+import SelectTeams from './components/SelectTeams';
 
   
 export default function RouterComponent() {
@@ -48,9 +49,10 @@ export default function RouterComponent() {
               <Route path="forgot_password" element={<ForgotPassword/>} />
               <Route path='leaderboard'element={<RequireAuth> <LeaderPage /> </RequireAuth>} />
               <Route path='leagues' element={<RequireAuth> <LeaguePage /> </RequireAuth>} />
+              <Route path='select_teams' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
               <Route path='rules' element={<RequireAuth> <RulesPage />  </RequireAuth> } /> 
               <Route path='profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>} /> 
-              <Route path='*'  element={<Navigate replace to="/" /> }/>
+              <Route path='*'  element={<Navigate replace to="/" />}/>
               <Route path="log_out" element={<Navigate replace to="/logout" />} />
               <Route path='logout' element={<Logout />} />
             </Route>

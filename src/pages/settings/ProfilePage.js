@@ -81,7 +81,7 @@ export default function ProfilePage() {
                 const extraData = docSnap.data();
 
                 setUserName(extraData.username);
-                setDisplayName(extraData.displayName);
+                // setDisplayName(extraData.displayName);
 
             }
             else {

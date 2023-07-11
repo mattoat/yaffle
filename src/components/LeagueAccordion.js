@@ -21,6 +21,8 @@ const LeagueAccordion = ( data ) => {
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: themeOptions.palette.primary.main,
       color: theme.palette.common.white,
+      paddingLeft: 5,
+      paddingRight: 5,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
@@ -112,6 +114,7 @@ const LeagueAccordion = ( data ) => {
                     <StyledTableCell align='center'>Goals Against</StyledTableCell>
                     <StyledTableCell align='center'>Goal Difference</StyledTableCell>
                 </>}
+                    <StyledTableCell align='center'>Played</StyledTableCell>
                     <StyledTableCell align='center'>Points</StyledTableCell>
                 </TableRow>
                 </TableHead>
@@ -124,15 +127,16 @@ const LeagueAccordion = ( data ) => {
                     <StyledTableCell component="th" scope="row">
                         {row.Rank}
                     </StyledTableCell>
-                    <StyledTableCell align='center'>{row.Name}</StyledTableCell>
+                    <StyledTableCell align='center'><strong>{row.Name}</strong></StyledTableCell>
                     {matches ? null : <>
                   {/* Other cells for larger screens */}
-                  <StyledTableCell align='center'>{row.Form}</StyledTableCell>
+                  <StyledTableCell align='center'><strong>{row.Form}</strong></StyledTableCell>
                   <StyledTableCell align='center'>{row.GF}</StyledTableCell>
                   <StyledTableCell align='center'>{row.GA}</StyledTableCell>
                   <StyledTableCell align='center'>{row.GD}</StyledTableCell>
                 </>}
-                    <StyledTableCell align='center'>{row.Points}</StyledTableCell>
+                    <StyledTableCell align='center'>{row.Played}</StyledTableCell>
+                    <StyledTableCell align='center'><strong>{row.Points}</strong></StyledTableCell>
                     </StyledTableRow>
                 ))}
                 </TableBody>

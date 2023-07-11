@@ -4,7 +4,6 @@ import { BrowserRouter, useLocation } from 'react-router-dom';
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import { getProfilePicture } from './components/firebase/ProfilePicture';
 import { initializeFirestore, getFirestore } from 'firebase/firestore';
-import { FirebaseAppProvider, FirestoreProvider, useFirestoreDocData, useFirestore, useFirebaseApp } from 'reactfire';
 import { config } from './components/firebase/Firebase';
 
 export const UserDataContext = createContext();
@@ -37,7 +36,6 @@ export default function App() {
   }, []);
 
   return (
-    <FirebaseAppProvider firebaseConfig={config} >
         <AvatarContext.Provider value = {{avatar, setAvatar}}>
             <UserDataContext.Provider value = {ud}>
               <SetUserDataContext.Provider value = {setUserData}>
@@ -47,7 +45,7 @@ export default function App() {
                 </SetUserDataContext.Provider>
               </UserDataContext.Provider>
           </AvatarContext.Provider>
-        </FirebaseAppProvider>
+
   );
 }
 
