@@ -4,7 +4,7 @@ import { useState } from "react";
 import Page from "./Page";
 import ContentPasteTwoToneIcon from '@mui/icons-material/ContentPasteTwoTone';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
-import { styles } from "../styles/styles";
+import LeagueSelection from './LeagueSelection';
 
 const league_info = require ( "../Leagues.json")
 const leagues = league_info.leagues;
@@ -30,12 +30,12 @@ const SelectTeams = () => {
             <br/>
 
             {(activeStep === 0) && (<PageOne />)}
-            {(activeStep > 0 && activeStep < 9) && (LeaguePage(activeStep - 1))}
+            {(activeStep > 0 && activeStep < 9) && (<LeagueSelection index={activeStep - 1} />)}
             
-            <div style={{paddingTop:"10%", position: 'relative', bottom: 10, left: '10%', width: '80%' }}>
+            <div style={{paddingTop:"10%", position: 'relative', bottom: -30, left: '10%', width: '80%' }}>
                 <MobileStepper
                     variant="progress"
-                    style={{"backgroundColor":"inherit", "maxWidth": "inherit", "bottom": "0px"}}
+                    style={{"backgroundColor":"inherit", "maxWidth": "inherit", "bottom": "0px", "paddingBottom": "-25px"}}
                     steps={9    }
                     position="static"
                     activeStep={activeStep}
@@ -74,24 +74,6 @@ const PageOne = () => {
     )
 }
 
-const LeaguePage = (index) => {
-    // console.log(league_info.leagues[index].name)
 
-    const name = league_info.leagues[index].name;
-    const id = league_info.leagues[index].id;
-    const teams = undefined;
-
-
-
-    return (
-        <div>
-            <Card style={styles.card}>
-                <Typography variant="h4">{name}</Typography>
-                {/* <img style={styles.img} src={badgeURL + id + ".png"}></img> */}
-            </Card>
-
-        </div>
-        );
-}
 
 export default SelectTeams;

@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage';
-import {Avatar} from '@mui/material';
 import { getAuth, updateProfile} from 'firebase/auth';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { AvatarContext, UserDataContext } from '../../App';
 
 let profileURL = '';
 
