@@ -83,6 +83,7 @@ function Login () {
 
             //signed in
             const user = userCredential.user 
+            console.log(user.emailVerified)
             //is user email verified
             setVerified(user.emailVerified)
 
@@ -94,13 +95,12 @@ function Login () {
             if (docSnap.exists()) {
                 const db_selectedTeams = docSnap.data().teamsSelected;
                 setSelectedTeams(db_selectedTeams);
-                setUserData({...userData, selectedTeams:db_selectedTeams});
+                // setUserData({...userData, selectedTeams:db_selectedTeams});
+                console.log(db_selectedTeams)
             }
             // if user has verified email and selected teams
-            if (verified && selectedTeams) {
-
-                setSignedIn(true);
-            }
+            
+            setLoading(false); 
         })
         .catch((err) => {
 
@@ -117,11 +117,11 @@ function Login () {
                     setError(err.message);
             }
         });
-        console.table([{"signedIn": signedIn}, {"verified": verified}, {"teamsSelected": selectedTeams}]);
-        setLoading(false); 
     }
-    
+    useEffect(() => {if (verified && selectedTeams) {
 
+        setSignedIn(true);
+    }},[verified, selectedTeams])
     return(     
         <Card style = {styles.cardStyle} >
             <h2>Log In.</h2> 

@@ -20,8 +20,6 @@ export default function RouterComponent() {
 
   const {userData} = useContext(UserDataContext);
 
-  
-
 
   function RequireAuth(props) {
 

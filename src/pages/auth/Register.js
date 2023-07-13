@@ -116,7 +116,7 @@ function Register (){
                         <div>
                             <h2>Verify your email before signing in.</h2>
                             <br></br>
-                            <p>We have sent you an email to confirm your email address. Please click the link to complete registration. It should arrive in your inbox within the next couple minutes.</p>
+                            <p>We have sent you an email to confirm your email address. Please click the link in the email to complete registration. It should arrive in your inbox within the next couple minutes.</p>
                         </div>
                     )
                     }

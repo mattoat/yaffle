@@ -1,19 +1,20 @@
 import { Modal, Button, MobileStepper, Typography, Paper, Icon, Card } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Page from "./Page";
 import ContentPasteTwoToneIcon from '@mui/icons-material/ContentPasteTwoTone';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
 import LeagueSelection from './LeagueSelection';
+import ReviewTeamsPage from "./ReviewTeamsPage";
 
-const league_info = require ( "../Leagues.json")
+const league_info = require( "../Leagues.json")
 const leagues = league_info.leagues;
 const badgeURL = "https://media.api-sports.io/football/leagues/";
-const leagueMatrix = [[], [], [], [], [], [], [], []];
 
 const SelectTeams = () => {
 
-    const {teamIDs, setTeamIDs} = useState([]);
+    const [teamIDs, setTeamIDs] = useState({});
+    const [teamNames, setTeamNames] = useState({});
     const [activeStep, setActiveStep] = useState(0);
 
 
@@ -25,23 +26,25 @@ const SelectTeams = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    // useEffect(() => {console.log(teamIDs)}, [teamIDs])
     return (
         <Page >
             <br/>
 
             {(activeStep === 0) && (<PageOne />)}
-            {(activeStep > 0 && activeStep < 9) && (<LeagueSelection index={activeStep - 1} />)}
+            {(activeStep > 0 && activeStep < 9) && (<LeagueSelection index={activeStep - 1} teamIDs={teamIDs} teamNames={teamNames} setTeamNames={setTeamNames} setTeamIDs={setTeamIDs} />)}
+            {(activeStep === 9) && (<ReviewTeamsPage teamNames={teamNames} teamIDs={teamIDs}/>)}
             
             <div style={{paddingTop:"10%", position: 'relative', bottom: -30, left: '10%', width: '80%' }}>
                 <MobileStepper
                     variant="progress"
                     style={{"backgroundColor":"inherit", "maxWidth": "inherit", "bottom": "0px", "paddingBottom": "-25px"}}
-                    steps={9    }
+                    steps={10}
                     position="static"
                     activeStep={activeStep}
                     sx={{ maxWidth: 400, flexGrow: 1 }}
                     nextButton={
-                        <Button size="small" onClick={handleNext} disabled={activeStep === 10}>
+                        <Button size="small" onClick={handleNext} disabled={activeStep === 9}>
                         {activeStep < 8  && (<Typography variant="h6">{activeStep + 1}</Typography>)}
                         {activeStep === 8 && (<ContentPasteTwoToneIcon/>)}
                             <KeyboardArrowRight />
