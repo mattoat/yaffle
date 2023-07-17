@@ -5,25 +5,19 @@ import Typography from '@mui/material/Typography';
 import LeagueAccordion from "../../components/LeagueAccordion";
 import { styles } from '../../styles/styles';
 
-const league_info = require ( "../../Leagues")
-const leagues = league_info.leagues;
+const leagues = require ( "../../Leagues")
 
 export default function LeaguePage() {
-
-
-
   return(
-      <Page>
-          <Card style={styles.cardStyle} >
+      <Page style={{"margin": "-2.5px"}}>
             <br />
             <Typography variant="h4">Leagues.</Typography>
             <br/>
-            {Object.keys(leagues).map((league) => (
-              <div key = {league}>
-                {LeagueAccordion(leagues[league])}
+            {Object.entries(leagues).map((league, index) => (
+              <div key = {index}>
+                {LeagueAccordion(league)}
               </div>
             ))}
-          </Card>
       </Page>
     );
 };

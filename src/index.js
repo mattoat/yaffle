@@ -20,7 +20,7 @@ ReactDOM.render(
     <ThemeProvider theme={themeOptions}>
       <FirebaseContext.Provider value={new Firebase()}>
         <App />
-      </FirebaseContext.Provider>,
+      </FirebaseContext.Provider>
     </ThemeProvider>,
   document.getElementById('root')
 );

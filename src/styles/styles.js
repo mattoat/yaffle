@@ -1,3 +1,4 @@
+import { CenterFocusStrong } from "@material-ui/icons";
 
 export const styles = {
     rightFloat: {
@@ -19,7 +20,8 @@ export const styles = {
     },
     cardStyle: {
         padding:'5px',
-        width: '80%',
+        float: "center",
+        maxWidth: '80%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: '20px'

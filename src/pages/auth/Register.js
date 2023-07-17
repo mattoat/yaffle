@@ -6,12 +6,13 @@ import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} fr
 import Firebase from '../../components/firebase/Firebase';
 import {getAuth} from 'firebase/auth';
 import {UserDataContext} from '../../App';
-import { doc, setDoc, getFirestore } from "firebase/firestore"; 
+import { doc, setDoc, getDoc, getFirestore, updateDoc, serverTimestamp } from "firebase/firestore"; 
 
 function Register (){
 
     const auth = getAuth();
     const {userData, setUserData} = useContext(UserDataContext);
+    const db = getFirestore(Firebase.app);
 
     const initialCreds = {
         name: '',
@@ -30,14 +31,19 @@ function Register (){
       
     }
 
-    async function setCompleteRegistration(userID) {
-        const db = getFirestore(Firebase.app);
+    const setUserdataToDB = async (uid, username, email) => {
 
-        await setDoc(doc(db, "usersCollection", userID), {
-            teamsSelected: false
+
+        await setDoc(doc(db, "usersCollection", uid), {
+            "accountCreated": serverTimestamp(),
+            "username": `${username}`,
+            "teamsSelected": false
         });
 
-        
+        await setDoc(doc(db, "lookups", uid), {
+            "username": username,
+            "email": email
+        });
 
     }
 
@@ -61,24 +67,42 @@ function Register (){
     async function signUp () {
         setLoading(true); 
         const {name, username, password, email} = creds
-            createUserWithEmailAndPassword(auth, email, password).then((user) => {
-                updateProfile(auth.currentUser, {displayName : name});
-                sendEmailVerification(auth.currentUser);
-                setStage(1);
+        const reference = doc(db, 'lookups', username);
 
-                setCompleteRegistration(user.user.uid)
+        await getDoc(reference).then((docSnap) => {
 
-            }).catch((error) => {
-                const errorCode = error.code;
-                switch (errorCode){
-                    case "auth/email-already-in-use":
-                        setError("There is already an account with that email address, please sign in with that account, or register with a different email address.");
-                    break;
-                    default:
-                        setError(error);
-        }
-        });
+            if (docSnap.exists()) {
+                if (docSnap.data()[`${username}`]) {
+                    const errMsg = "Username '" + username + "' is already taken, try another one.";
+                    console.log(errMsg)
+                    setError(errMsg);
+                    setLoading(false);
+                    return;
+                }
+            }
+            else {
+                createUserWithEmailAndPassword(auth, email, password).then((user) => {
+                    updateProfile(auth.currentUser, {displayName : name});
+                    sendEmailVerification(auth.currentUser);
+                    
+                    setUserdataToDB(user.user.uid, username, email)
+                    
+                    setStage(1);
         
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    switch (errorCode){
+                        case "auth/email-already-in-use":
+                            setError("There is already an account with that email address, please sign in with that account, or register with a different email address.");
+                        break;
+                        default:
+                            setError(error);
+                    }
+                });
+                
+            }
+        })
+
         setLoading(false); 
     }
 

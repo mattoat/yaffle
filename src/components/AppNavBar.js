@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {AppBar, Box, Toolbar,
-  IconButton, Typography, Menu,
-   Container, Avatar, Button,
-   Tooltip, MenuItem, useScrollTrigger,
-    Slide} from '@mui/material/';
+  IconButton, Typography, Tooltip, Avatar,
+   ListItemButton, ListItem, List,
+   ListItemText, Drawer, useScrollTrigger,
+    Slide, useMediaQuery} from '@mui/material/';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useLocation } from 'react-router-dom';
 import AppMenu from './AppMenu';
@@ -11,6 +11,8 @@ import { useState, useContext, useEffect } from 'react';
 import {AvatarContext} from '../App';
 import {getProfilePicture} from '../components/firebase/ProfilePicture'
 import { UserDataContext } from '../App';
+import { unstable_getScrollbarSize } from '@mui/utils';
+import { styles } from '../styles/styles';
 
 const logo = "/assets/FullLogoWhite.svg";
 
@@ -37,14 +39,19 @@ const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [profilePic, setProfilePic] = useState('/assets/avatar.png');
-  const {avatar, setAvatar} = useContext(AvatarContext);
+  const [drawer, setDrawer] = useState(false);
 
   const {userData, setUserData} = useContext(UserDataContext);
 
   useEffect(() => {
     // Fetch the profile picture from local storage or Firebase
-    setProfilePic(getProfilePicture(userData));
+    setProfilePic(getProfilePicture());
+
+    
   }, []);
+
+
+  const matches = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   // const {avatar, setAvatar} = useContext(AvatarContext);
   const handleOpenNavMenu = (event) => {
@@ -55,103 +62,70 @@ const AppNavBar = (props) => {
   };
   const handleCloseNavMenu = () => {
       setAnchorElNav(null);
-    };
+  };
 
-  return (  
-    <HideOnScroll {...props} >
-    <AppBar style={sticky} >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            <Link to="/">
-              <img src={logo} style={{"marginTop":"10px"}} width="100em" alt="Yaffle"/>
-            </Link>
-          </Typography>
+  const toggleDrawer = (b) => {
+    setDrawer(b);
+  };
 
-          {(<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {props.pages.map((page) => (
-                <Link key={page} to= {'/' + page}>
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.charAt(0).toUpperCase() + page.slice(1)}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-              
-            </Menu>
-          </Box>)}
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            <Link to="/">
-              <img src={logo} float="center" alt="image" width="100em" alt="Yaffle"/>
-            </Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {props.pages.map((page) => (
-              <Button
-                href={'/'+ page}
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <Box style={{paddingRight:'30px'}}>
-            <h3>{props.un}</h3>
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} style={{"overflow":"hidden"}} sx={{ p: 0 }}>
-                {/* <Avatar src={avatar} alt="User settings" /> */}
-                {/* {ProfilePicture(true)} */}
-                <img src={avatar} width ='50px' style={{"border":"1px solid #166924"}}/>
+  return (
+    <HideOnScroll >
+      <AppBar style={sticky} >
+        <Toolbar >
+          {/* MENU */}
+            <div>
+              <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => {toggleDrawer(true)}}>
+                <MenuIcon />
               </IconButton>
-            </Tooltip>
-            <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
-    </HideOnScroll>
+              <Drawer
+                style={{"color": "#d06100"}}
+                anchor={'left'}
+                open={drawer}
+                onClose={ () => {toggleDrawer(false)}}
+              >
+                <List>
+                  {props.pages.map((text, index) => (
+                    <ListItem key={text}>
+                      <ListItemButton onClick={() => {toggleDrawer(false)}}>
+                        <Link 
+                        to={"/" + text}
+                        style={{ textDecoration: 'none', color: "#ff8d26" }}
+                        >
+                          <ListItemText primary={text}/>
+                        </Link>
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Drawer>
+            </div>
 
-  );
+          {/* LOGO */}
+          <Typography variant="h6" sx={{ marginTop: "10px", flexGrow: 1, textAlign: 'center' }}>
+            <div style={{display: "none"}} >
+              Yaffle
+            </div>
+              <Link to="/">
+                 <img src={logo} width="100em" alt="Yaffle"/>
+               </Link>
+          </Typography>
+
+          {/* AVATAR */}
+          <Box style={{paddingRight:'-30px'}}>
+             <h3>{props.un}</h3>
+           </Box>
+           <Box sx={{ position: 'absolute',height:'60px', right: '15px' }}>
+             <Tooltip title="Open settings">
+               <IconButton onClick={handleOpenUserMenu} style={{"overflow":"hidden", "border":"1px solid #ff8d26"}} sx={{ p: 0 }}>
+               <Avatar src={profilePic} style={{height:"60px", width:"auto"}}/>
+             </IconButton>
+             </Tooltip>
+             <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />
+           </Box>
+
+        </Toolbar>
+      </AppBar>
+    </HideOnScroll>
+  )
 };
 export default AppNavBar;

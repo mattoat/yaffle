@@ -17,9 +17,25 @@ const db = admin.firestore();
 const LEAGUEIDS = [179, 39, 180, 40, 135, 61, 78, 140];
 const SEASON = 2022;
 
+
 const capitalizeName = (str) => {
-  // return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  return str;
+
+  let words = str.split(" ");
+  const exceptions = ["AC", "VFB", "VFL", "VSV", "SC", "RB", "AS", "QPR","FC","PSG"];
+
+  const capitalizedWords = words.map((word) => {
+    const modifiedWord = word.replace(/\b\w+\b/g, (match) => {
+      if (exceptions.includes(match.toUpperCase())) {
+          // console.log(match);
+        return match.toLowerCase();
+      } else {
+        return match.charAt(0).toUpperCase() + match.slice(1).toLowerCase();
+      }
+    });
+    
+    return modifiedWord;
+  });
+  return capitalizedWords.join(" ");
 };
 
 const callAPI = async (leagueIndex) => {
@@ -37,13 +53,14 @@ const callAPI = async (leagueIndex) => {
       return uploadData(standing, leagueIndex);
     }));
   } catch (error) {
-    logger.error("Error in callAPI: ", error);
+    logger.error("Error in callAPI: (League " + leagueIndex + ") ", error);
   }
 };
 
 const parseText = async (body, leagueIndex) => {
+  // logger.info(body)
   const league = body.response[0].league.standings;
-
+    
   let ids = [];
   let names = [];
   let badges = [];
@@ -54,7 +71,8 @@ const parseText = async (body, leagueIndex) => {
   let forms = [];
   let points = [];
   let standings = [];
-
+    
+    
   if (league.length > 1) {
     for (const l of league[1]) {
       ids = ids.concat(l.team.id);
@@ -67,20 +85,21 @@ const parseText = async (body, leagueIndex) => {
       forms = forms.concat(l.form);
       points = points.concat(l.points);
     }
-  } else {
-    for (const l of league[0]) {
-      ids = ids.concat(l.team.id);
-      names = names.concat(l.team.name);
-      badges = badges.concat(l.team.logo);
-      playeds = playeds.concat(l.all.played);
-      gds = gds.concat(l.goalsDiff);
-      gfs = gfs.concat(l.all.goals.for);
-      gas = gas.concat(l.all.goals.against);
-      forms = forms.concat(l.form);
-      points = points.concat(l.points);
-    }
   }
-
+  else {
+    for (const l of league[0]) {
+        ids = ids.concat(l.team.id);
+        names = names.concat(l.team.name);
+        badges = badges.concat(l.team.logo);
+        playeds = playeds.concat(l.all.played);
+        gds = gds.concat(l.goalsDiff);
+        gfs = gfs.concat(l.all.goals.for);
+        gas = gas.concat(l.all.goals.against);
+        forms = forms.concat(l.form);
+        points = points.concat(l.points);
+      }
+  }
+    
   for (let i = 0; i < names.length; i++) {
     const obj = {
       id: ids[i],
@@ -96,16 +115,18 @@ const parseText = async (body, leagueIndex) => {
     };
     standings = standings.concat(obj);
 
-    // await uploadData(obj, leagueIndex);
+    await uploadData(obj, leagueIndex);
   }
   return standings;
 };
 
-const uploadData = (object, leagueIndex) => {
-  logger.log("Data uploading: " + object);
+const uploadData = async (object, leagueIndex) => {
+  logger.log("Data uploading: " + JSON.stringify(object));
   const collectionName = String("league" + LEAGUEIDS[leagueIndex]);
   const recordName = String(object.id);
-  return db.collection(collectionName).doc(recordName).set(object);
+  
+  const reference = db.collection(collectionName).doc(recordName)
+  await reference.set(object, {merge: true});
 };
 // const main = (async() => {
 

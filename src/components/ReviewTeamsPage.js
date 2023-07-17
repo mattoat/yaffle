@@ -1,11 +1,11 @@
 import { List, ListItem, Typography, Button, Table, TableRow, TableBody, TableHead, TableContainer, Paper, TableCell, CircularProgress } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { getFirestore, serverTimestamp, doc, updateDoc } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserDataContext } from "../App";
 import Firebase from "./firebase/Firebase";
 
-const league_info = require ( "../Leagues.json")
-const leagues = league_info.leagues;
+const leagues = require( "../Leagues.json")
 const badgeURL = "https://media.api-sports.io/football/";
 
 
@@ -16,6 +16,7 @@ const ReviewTeamsPage = (props) => {
     const [loading, setLoading] = useState(false);
     const [stage, setStage] = useState(0); // 0 for incomplete selection, 1 for complete selection, 2 for submitted 
     const [fullyComplete, setFullyComplete] = useState(false);
+    const {userData, setUserData} = useContext(UserDataContext);
     let teamIDsArray = Object.entries(teamIDs)
 
     useEffect(() => {
@@ -32,7 +33,9 @@ const ReviewTeamsPage = (props) => {
         const app = Firebase.app;
         const db = getFirestore(app);
 
-        const uid = getAuth(app).currentUser.uid;
+        setUserData(getAuth(app).currentUser);
+
+        const uid = userData.uid;
 
         const ref = doc(db, "usersCollection", uid);
         await updateDoc(ref, {
@@ -42,7 +45,7 @@ const ReviewTeamsPage = (props) => {
         });
 
         setLoading(false);
-        setStage(2)
+        setStage(2);
 
     }
 
@@ -78,14 +81,9 @@ const ReviewTeamsPage = (props) => {
                                         <TableBody>
                                         {teamIDsArray.map((team, index) => {
 
-                                            let leagueName = "";
+                                            let leagueName = Object.keys(leagues)[index];
 
-                                            for (let i = 0; i < leagues.length; i++) {
-                                                // console.log("team[0] " + team[0] + " leagues[i].id " + leagues[i].id)
-                                                if (leagues[i].id == team[0]){
-                                                    leagueName = leagues[i].name;
-                                                }
-                                            }
+                                        
                                             return (
                                                 <TableRow
                                                 key={index}
@@ -125,6 +123,8 @@ const ReviewTeamsPage = (props) => {
                     <div>
                         <Typography variant="h4">Teams submitted!</Typography> <br />
                         <Typography variant="body1">Congratulations on submitting your teams.</Typography>
+                        <br /><br /><br />
+                        <Button color="primary" variant="outlined" onClick={() => {props.setSelectedTeams(true)}}>Complete Registration</Button>
                     </ div>
                 )}
         </div>

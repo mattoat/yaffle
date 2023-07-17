@@ -7,7 +7,10 @@ import 'firebase/firestore';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { themeOptions } from '../styles/theme';
 
-const LeagueAccordion = ( data ) => {
+const LeagueAccordion = ( league ) => {
+console.log(league)
+  const id = league[0]
+  const name = league[1]
   const [expanded, setExpanded] = useState(false);
   const [leagueData, setLeagueData] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -42,7 +45,7 @@ const LeagueAccordion = ( data ) => {
   const getLeagueData = async () => {
     setLoading(true);
 
-    const leagueReference = collection(db, "league" + data.id);
+    const leagueReference = collection(db, "league" + id);
     const q = query(leagueReference, orderBy("Rank", "asc"));
 
     const querySnapshot = await getDocs(q);
@@ -54,7 +57,7 @@ const LeagueAccordion = ( data ) => {
     const timestamp = new Date()
     const utc_timestamp = timestamp.getTime();
     const obj = {"timestamp": utc_timestamp, "content": docs};
-    localStorage.setItem("league" + data.id, JSON.stringify(obj));
+    localStorage.setItem("league" + id, JSON.stringify(obj));
     setLeagueData(docs);
     setLoading(false);
     console.log(loading);
@@ -65,18 +68,18 @@ const LeagueAccordion = ( data ) => {
     setExpanded(isExpanded);  
     setLoading(true);  
     if(!expanded) {
-        if (localStorage.getItem("league" + data.id) != null) {
+        if (localStorage.getItem("league" + id) != null) {
 
             const now = new Date().getTime();
-            const then = parseInt(JSON.parse(localStorage.getItem("league" + data.id)).timestamp);
+            const then = parseInt(JSON.parse(localStorage.getItem("league" + id)).timestamp);
 
             // If then is greater than now - TTL then the data is not stale, and can be used
             if (then > now - TTL) {
-                const cachedLeagueData = JSON.parse(localStorage.getItem("league" + data.id)).content;
+                const cachedLeagueData = JSON.parse(localStorage.getItem("league" + id)).content;
                 setLeagueData(cachedLeagueData);
             }
             else { // else the league data is stale and should be removed and fetched again
-                localStorage.removeItem("league" + data.id);
+                localStorage.removeItem("league" + id);
                 await getLeagueData();
             }
         }
@@ -92,8 +95,8 @@ const LeagueAccordion = ( data ) => {
   return (
     <Accordion expanded={expanded} onChange={handleChange}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <Typography>{data.name}</Typography>
-        <img style={{"paddingLeft": "20px"}} height= "30px"  src= {BADGEURL + "leagues/" + data.id + ".png"} />
+        <Typography>{name}</Typography>
+        <img style={{"paddingLeft": "20px"}} height= "30px"  src= {BADGEURL + "leagues/" + id + ".png"} />
       </AccordionSummary>
       <AccordionDetails>
         {loading && 
@@ -105,17 +108,17 @@ const LeagueAccordion = ( data ) => {
             <Table aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <StyledTableCell align='center'>Rank</StyledTableCell>
-                    <StyledTableCell align='center'>Club</StyledTableCell>
+                    <StyledTableCell align='left'>Rank</StyledTableCell>
+                    <StyledTableCell align='left'>Club</StyledTableCell>
                     {matches ? null : <>
                     {/* Other columns for larger screens */}
-                    <StyledTableCell align='center'>Form</StyledTableCell>
-                    <StyledTableCell align='center'>Goals For</StyledTableCell>
-                    <StyledTableCell align='center'>Goals Against</StyledTableCell>
-                    <StyledTableCell align='center'>Goal Difference</StyledTableCell>
+                    <StyledTableCell align='left'>Form</StyledTableCell>
+                    <StyledTableCell align='left'>Goals For</StyledTableCell>
+                    <StyledTableCell align='left'>Goals Against</StyledTableCell>
+                    <StyledTableCell align='left'>Goal Difference</StyledTableCell>
                 </>}
-                    <StyledTableCell align='center'>Played</StyledTableCell>
-                    <StyledTableCell align='center'>Points</StyledTableCell>
+                    <StyledTableCell align='left'>Played</StyledTableCell>
+                    <StyledTableCell align='left'>Points</StyledTableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -127,16 +130,16 @@ const LeagueAccordion = ( data ) => {
                     <StyledTableCell component="th" scope="row">
                         {row.Rank}
                     </StyledTableCell>
-                    <StyledTableCell align='center'><strong>{row.Name}</strong></StyledTableCell>
+                    <StyledTableCell align='left'><strong>{row.Name}</strong></StyledTableCell>
                     {matches ? null : <>
                   {/* Other cells for larger screens */}
-                  <StyledTableCell align='center'><strong>{row.Form}</strong></StyledTableCell>
-                  <StyledTableCell align='center'>{row.GF}</StyledTableCell>
-                  <StyledTableCell align='center'>{row.GA}</StyledTableCell>
-                  <StyledTableCell align='center'>{row.GD}</StyledTableCell>
+                  <StyledTableCell align='left'><strong>{row.Form}</strong></StyledTableCell>
+                  <StyledTableCell align='left'>{row.GF}</StyledTableCell>
+                  <StyledTableCell align='left'>{row.GA}</StyledTableCell>
+                  <StyledTableCell align='left'>{row.GD}</StyledTableCell>
                 </>}
-                    <StyledTableCell align='center'>{row.Played}</StyledTableCell>
-                    <StyledTableCell align='center'><strong>{row.Points}</strong></StyledTableCell>
+                    <StyledTableCell align='left'>{row.Played}</StyledTableCell>
+                    <StyledTableCell align='left'><strong>{row.Points}</strong></StyledTableCell>
                     </StyledTableRow>
                 ))}
                 </TableBody>

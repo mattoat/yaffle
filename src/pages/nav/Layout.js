@@ -22,12 +22,10 @@ export default function Layout(props) {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        setUserData(user)
-        
+        setUserData(user);
       } 
       else {
         // User is signed out
-        
         setUserData(null);
       }
     });
@@ -37,7 +35,7 @@ export default function Layout(props) {
   useEffect(() => {
     
     if(userData != null && userData.emailVerified) {
-        updatePages(['rules', 'leaderboard', 'leagues'])
+        updatePages(['Rules', 'Leaderboard', 'Leagues'])
         updateSettings(['Profile', 'Log Out'])
     }
     else{

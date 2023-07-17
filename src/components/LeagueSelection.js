@@ -7,8 +7,7 @@ import Firebase from "./firebase/Firebase";
 import SelectTeams from "./SelectTeams";
 
 const teams = [];
-const league_info = require ( "../Leagues.json")
-const leagues = league_info.leagues;
+const leagues = require ( "../Leagues.json")
 const badgeURL = "https://media.api-sports.io/football/";
 const TTL = 86400000 // 24 hours
 
@@ -17,13 +16,11 @@ const TTL = 86400000 // 24 hours
 const LeagueSelection = (props) => {
 
     
-    const league_info = require ( "../Leagues.json")
-    const leagues = league_info.leagues;
-    // console.log(league_info.leagues[index].name)
     const {index, teamIDs, teamNames, setTeamNames, setTeamIDs} = props;
-
-    const name = league_info.leagues[index].name;
-    const id = league_info.leagues[index].id;
+    let entry = Object.entries(leagues)[index]
+    console.log(entry)
+    const id = entry[0];
+    const name = entry[1];
     const [teams, setTeams] = useState([]);
     const [loadingData, setLoadingData] = useState(true)
     const [selectedIndex, setSelectedIndex] = useState(-1)

@@ -1,13 +1,10 @@
 {
-    "leagues":[
-        {"id": 39, "name" : "English Premier League"},
-        {"id": 40, "name" : "English Championship"},
-        {"id": 61, "name" : "Ligue 1"},
-        {"id": 78, "name" : "Bundesliga"},
-        {"id": 135, "name" : "Serie A"},
-        {"id": 140, "name" : "La Liga"},
-        {"id": 179, "name" : "Scottish Premiership"},
-        {"id": 180, "name" : "Scottish Championship"}
-    ],
-    "season":2022
+    "39" : "English Premier League",
+    "40" : "English Championship",
+    "61" : "Ligue 1",
+    "78" : "Bundesliga",
+    "135" : "Serie A",
+    "140" : "La Liga",
+    "179" : "Scottish Premiership",
+    "180" : "Scottish Championship"
 }

@@ -1,13 +1,13 @@
-import { Card } from '@mui/material';
+import { Card, Typography } from '@mui/material';
 import { TextField, Button, CircularProgress, Alert } from '@mui/material';
 import { useLocation, useNavigate, Link, Navigate, Redirect , Route } from 'react-router-dom';
 import React, { useEffect, useContext, useState } from 'react';
 import {  signInWithEmailAndPassword, getAuth, sendEmailVerification} from 'firebase/auth';
 import {styles} from '../../styles/styles';
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, collection, getFirestore, where, query, getDocs } from "firebase/firestore";
 import {SetUserDataContext, UserDataContext} from '../../App';
 import Firebase from '../../components/firebase/Firebase';
-import { CatchingPokemonSharp } from '@mui/icons-material';
+import SelectTeams from "../../components/SelectTeams";
 
 
 function Login () {
@@ -28,20 +28,9 @@ function Login () {
     const [verified, setVerified] = useState(undefined);
     const [creds, setCreds] = useState(initialCreds);
     const [signedIn, setSignedIn] = useState(false);
-
+    const db = getFirestore(Firebase.app)
     let navigate = useNavigate();
     let location = useLocation();
-
-    // useEffect(() => {
-
-    //     // let from = location.state?.from?.pathname || "/";
-        
-    //     if(userData.username != null){
-    //         setSignedIn(true);
-    //         setUsername(userData.username);
-    //     }
-        
-    // }, []);
 
     const { from } = location.state || {
         from: {
@@ -65,21 +54,45 @@ function Login () {
 
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
-    }
-    const goToSelectteams = () => {
 
     }
+
+    const getEmailByUsername = async (username) => {
+        const usersRef = collection(db, "lookups/");
+        
+        const q = query(usersRef, where('username', '==', username));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            console.log("User not found")
+            return null; // User not found
+          }
+        else {
+            const userDoc = querySnapshot.docs[0];
+            const email = userDoc.data().email;
+            return email
+        }
+
+      };
 
     const onLogin = async (e) => {
+        setError('')
         // const app = Firebase.app;
         const auth = getAuth();
         setLoading(true); 
         e.preventDefault();
-        setUserData({...userData, selectedTeams:false});
-        // console.log(userData);
+        let email = creds.email;
 
-        await signInWithEmailAndPassword(auth, creds.email, creds.password)
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(creds.email);
+        if (!isValidEmail) {
+            const username = creds.email
+            email = await getEmailByUsername(username);
+            
+        }
+        await signInWithEmailAndPassword(auth, email, creds.password)
         .then(async (userCredential) => {
+
+
 
             //signed in
             const user = userCredential.user 
@@ -103,29 +116,31 @@ function Login () {
             setLoading(false); 
         })
         .catch((err) => {
+            setLoading(false);
 
-            switch(err.code){
-                case "auth/user-not-found":
-                case "auth/wrong-password":
-                case "auth/invalid-password":
-
-                    setError("Username or password incorrect.")
-                    break;
-                case "auth/invalid-email":
-                    setError("Invalid email address.")
-                default:
-                    setError(err.message);
+            if (err.code == "auth/wrong-password"|| err.code == "auth/user-not-found" || err.code == "auth/invalid-password" || err.response?.status === 400) {
+                setError("Username or password incorrect.");
+            } else if (err.code === "auth/too-many-requests") {
+                setError("Too many requests, please wait a couple of minutes and try again.");
+            } else {
+                setError("An error has occurred. If this keeps occurring, please contact Matthew.");
             }
         });
     }
+
     useEffect(() => {if (verified && selectedTeams) {
 
         setSignedIn(true);
     }},[verified, selectedTeams])
     return(     
-        <Card style = {styles.cardStyle} >
-            <h2>Log In.</h2> 
-            {loading && (<CircularProgress color="secondary" />)}
+        <div>
+            {loading && (
+                <Card style = {styles.cardStyle} >
+                    <Typography variant="h4">Log In.</Typography> 
+                    <br /><br /><br />
+                    <CircularProgress color="secondary" />
+                </Card>
+            )}
             {(signedIn && verified && selectedTeams && !loading) &&  (
                 <Navigate to={{
                 pathname: "/",
@@ -134,22 +149,25 @@ function Login () {
                 />
             )}        
             {(!signedIn && verified == false && !loading) && (
-                <div style = {styles.cardStyle} >
+                <Card style = {styles.cardStyle}  >
+                    <Typography variant="h4">Log In.</Typography> 
+                    <br /><br /><br />
                     <p>You need to verify your email before you can sign in.</p>
                     <Button onClick={resendEmail} color='secondary' variant="contained">Resend Email?</Button><br /> <br />
-                    <Link style={{"textDecoration": "none"}} to={{pathname:"/login", state: {referrer: from}}}><Button color='primary' variant='contained'>Verified?</Button></Link>
-                </div>
+                    <Link style={{"textDecoration": "none"}} to={{pathname:"/login", state: {referrer: from}}}><Button onClick={() => {setVerified(false)}} color='primary' variant='contained'>Verified?</Button></Link>
+                </Card>
             )}    
             {(verified && selectedTeams == false && !loading) && (
-                <Navigate to={{
-                    pathname: "/select_teams",
-                    state: {referrer: from}
-                }} />
+                <div >
+                    <br /><br /><br />
+                    <SelectTeams setSelectedTeams={setSelectedTeams}/>
+                </div>
             ) }
             {(!signedIn && selectedTeams == undefined && verified == undefined && !loading) && (
-                <div>
-
-                <TextField onChange={evt => onChange('email', evt.target.value)} name="email" type="email" label="Email" color="secondary" /><br /> <br />
+                <Card style = {styles.cardStyle} >
+                <Typography variant="h4">Log In.</Typography> 
+                <br /><br /><br />
+                <TextField onChange={evt => onChange('email', evt.target.value)} name="email" type="email" label="Username or Email" color="secondary" /><br /> <br />
                 <TextField 
                     name="password"
                     onChange={evt => onChange('password', evt.target.value)}
@@ -161,9 +179,9 @@ function Login () {
                 <Button onClick={onLogin} color='secondary' variant="contained">Log In</Button> <br /> <br />
                 <Button onClick= {routeChange} color="secondary" variant="text">Forgot Password?</Button><br /><br />
                 {(error !== '') && (<Alert onClick={() => setError("")} severity="error">{error}</Alert>)}
-            </div>
+            </Card>
             )} 
-        </Card>
+        </div>
     );
 }
 

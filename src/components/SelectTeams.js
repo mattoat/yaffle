@@ -1,21 +1,43 @@
 import { Modal, Button, MobileStepper, Typography, Paper, Icon, Card } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Page from "./Page";
 import ContentPasteTwoToneIcon from '@mui/icons-material/ContentPasteTwoTone';
 import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
+import { doc, getDoc, docSnap, getFirestore } from "firebase/firestore";
 import LeagueSelection from './LeagueSelection';
 import ReviewTeamsPage from "./ReviewTeamsPage";
+import { useNavigate} from "react-router-dom";
+import { UserDataContext } from "../App";
 
-const league_info = require( "../Leagues.json")
-const leagues = league_info.leagues;
 const badgeURL = "https://media.api-sports.io/football/leagues/";
 
-const SelectTeams = () => {
+const SelectTeams = (props) => {
 
     const [teamIDs, setTeamIDs] = useState({});
     const [teamNames, setTeamNames] = useState({});
     const [activeStep, setActiveStep] = useState(0);
+    const {userData, setUserData} = useContext(UserDataContext)
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const db = getFirestore()
+        const reference = doc(db, 'usersCollection/' + userData.uid);
+        console.log(userData.uid)
+
+        getDoc(reference).then((docSnap) => {
+
+            if (docSnap.exists()) {
+                const extraData = docSnap.data();
+                console.log(extraData)
+
+                if (extraData.teamsSelected) {
+
+                    navigate(-1);
+                }
+            }
+        })
+    },[])
 
 
     const handleNext = () => {
@@ -33,7 +55,7 @@ const SelectTeams = () => {
 
             {(activeStep === 0) && (<PageOne />)}
             {(activeStep > 0 && activeStep < 9) && (<LeagueSelection index={activeStep - 1} teamIDs={teamIDs} teamNames={teamNames} setTeamNames={setTeamNames} setTeamIDs={setTeamIDs} />)}
-            {(activeStep === 9) && (<ReviewTeamsPage teamNames={teamNames} teamIDs={teamIDs}/>)}
+            {(activeStep === 9) && (<ReviewTeamsPage setSelectedTeams={props.setSelectedTeams} teamNames={teamNames} teamIDs={teamIDs}/>)}
             
             <div style={{paddingTop:"10%", position: 'relative', bottom: -30, left: '10%', width: '80%' }}>
                 <MobileStepper
