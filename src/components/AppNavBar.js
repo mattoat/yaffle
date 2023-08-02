@@ -38,17 +38,14 @@ function HideOnScroll(props) {
 const AppNavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [profilePic, setProfilePic] = useState('/assets/avatar.png');
   const [drawer, setDrawer] = useState(false);
 
-  const {userData, setUserData} = useContext(UserDataContext);
+  const {avatar, setAvatar} = useContext(AvatarContext);
 
   useEffect(() => {
     // Fetch the profile picture from local storage or Firebase
-    setProfilePic(getProfilePicture());
-
-    
-  }, []);
+    setAvatar(getProfilePicture());    
+  }, [avatar]);
 
 
   const matches = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -85,16 +82,17 @@ const AppNavBar = (props) => {
               >
                 <List>
                   {props.pages.map((text, index) => (
-                    <ListItem key={text}>
-                      <ListItemButton onClick={() => {toggleDrawer(false)}}>
-                        <Link 
+                    <Link 
                         to={"/" + text}
-                        style={{ textDecoration: 'none', color: "#ff8d26" }}
+                        style={{ textDecoration: 'strong', color: "#0c3914" }}
+                        key={text}
                         >
+                    <ListItem>
+                      <ListItemButton onClick={() => {toggleDrawer(false)}}>
                           <ListItemText primary={text}/>
-                        </Link>
                       </ListItemButton>
                     </ListItem>
+                        </Link>
                   ))}
                 </List>
               </Drawer>
@@ -117,7 +115,7 @@ const AppNavBar = (props) => {
            <Box sx={{ position: 'absolute',height:'60px', right: '15px' }}>
              <Tooltip title="Open settings">
                <IconButton onClick={handleOpenUserMenu} style={{"overflow":"hidden", "border":"1px solid #ff8d26"}} sx={{ p: 0 }}>
-               <Avatar src={profilePic} style={{height:"60px", width:"auto"}}/>
+               <img src={avatar} style={{height:"60px", width:"60px"}}/>
              </IconButton>
              </Tooltip>
              <AppMenu settings={props.settings} handleCloseNavMenu={handleCloseNavMenu} setAnchorElUser={setAnchorElUser} anchorElUser={anchorElUser} />

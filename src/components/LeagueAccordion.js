@@ -8,7 +8,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { themeOptions } from '../styles/theme';
 
 const LeagueAccordion = ( league ) => {
-console.log(league)
+// console.log(league)
   const id = league[0]
   const name = league[1]
   const [expanded, setExpanded] = useState(false);
@@ -45,8 +45,8 @@ console.log(league)
   const getLeagueData = async () => {
     setLoading(true);
 
-    const leagueReference = collection(db, "league" + id);
-    const q = query(leagueReference, orderBy("Rank", "asc"));
+    const leagueReference = collection(db, "clubs");
+    const q = query(leagueReference, where("League", "==", id), orderBy("Rank", "asc"));
 
     const querySnapshot = await getDocs(q);
 

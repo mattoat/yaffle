@@ -1,7 +1,7 @@
 import { ListItem, ListItemIcon, List, Typography, CircularProgress } from "@mui/material";
 import useEnhancedEffect from "@mui/material/utils/useEnhancedEffect";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs,doc,  setDoc, query, orderBy } from "firebase/firestore";
+import { getFirestore, collection, getDocs,doc,  setDoc, query, orderBy, where } from "firebase/firestore";
 import {useState, useEffect} from "react"
 import Firebase from "./firebase/Firebase";
 import SelectTeams from "./SelectTeams";
@@ -41,8 +41,8 @@ const LeagueSelection = (props) => {
         }
         else {
 
-            const leagueReference = collection(db, "league" + id);
-            const q = query(leagueReference, orderBy("Name", "asc"));
+            const leagueReference = collection(db, "clubs");
+            const q = query(leagueReference, where("League", "==", id), orderBy("Name", "asc"));
             
             const querySnapshot = await getDocs(q);
             
@@ -52,7 +52,7 @@ const LeagueSelection = (props) => {
             }));
             
             setTeams(newTeams);
-            localStorage.setItem(id, JSON.stringify(newTeams))
+            localStorage.setItem(id, JSON.stringify(newTeams));
         }
         setLoadingData(false);
       }

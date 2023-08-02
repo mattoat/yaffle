@@ -5,7 +5,7 @@ import {getStorage} from 'firebase/storage';
 import {getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager} from 'firebase/firestore';
 
 export const config = {
-  apiKey: "AIzaSyCaIL5pZBlsrynDX6CJzi21uVKvC-A-6gw",
+  apiKey: "AIzaSyDP_yuRmf21pffadUjOW3OGDxTSPH4auNo",
   authDomain: "yaffle-d76fe.firebaseapp.com",
   databaseURL: "https://yaffle-d76fe-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "yaffle-d76fe",

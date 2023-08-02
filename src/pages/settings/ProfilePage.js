@@ -27,7 +27,7 @@ const Line = styled.div`
 `
 const PictureFrame = styled.div`
     float: center;
-    border: solid gray 1px;
+    border: 3px solid #ff8d26;
     border-radius: 50%;
     width: 200px;
     height: 200px;
@@ -52,6 +52,7 @@ const imgStyle = {
 export default function ProfilePage() {
     
     const [loading, setLoading] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
     const [displayName, setDisplayName] = useState("");
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -82,7 +83,7 @@ export default function ProfilePage() {
                     const leagueCollection = "league" + id;
                     const selectedTeam = d[id];
                     
-                    const q = query(collection(db, leagueCollection), where("id", "==", selectedTeam));
+                    const q = query(collection(db, "clubs"), where("id", "==", selectedTeam));
 
                     const querySnapshot = await getDocs(q);
                     querySnapshot.forEach(async (doc) => {
@@ -120,6 +121,7 @@ export default function ProfilePage() {
     };
 
     const onProcessFile = async (e) => {
+        setImageLoading(true);
         e.preventDefault();
 
         let file = e.target.files[0];
@@ -132,24 +134,26 @@ export default function ProfilePage() {
 
           try {
             file = await imageCompression(file, options);
-            console.log(file.size/1024/1024);
+            // console.log(file.size/1024/1024);
           } catch (error) {
             console.log(error);
           }
-          setLoading(true);
           // UPLOAD PICTURE TO FIREBASE
-          setProfilePicture(file, (url) => {
+          await setProfilePicture(file, (url) => {
               
               console.log(url);
               setAvatar(url);
+              setImageLoading(false);
             });  
-        setLoading(false);
+            setImageLoading(false);
         }
 
     const matches = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
+
     return(
         <Page>
+            <br />
             <Typography textAlign={'center'} variant={'h4'}>Profile</Typography>
                         <PictureFrame >
                         {(loading) && (
@@ -196,6 +200,7 @@ export default function ProfilePage() {
 
                 </Line>
                 {loading && (<LinearProgress color="secondary" />)}
+                {imageLoading && (<LinearProgress color="primary" />)}
                 {(error !== '') && (<Alert onClick={() => setError("")} severity="error">{error}</Alert>)}
 
             {!loading && (

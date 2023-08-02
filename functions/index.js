@@ -15,7 +15,7 @@ const logger = functions.logger;
 const db = admin.firestore();
 
 const LEAGUEIDS = [179, 39, 180, 40, 135, 61, 78, 140];
-const SEASON = 2022;
+const SEASON = 2023;
 
 
 const capitalizeName = (str) => {
@@ -27,7 +27,7 @@ const capitalizeName = (str) => {
     const modifiedWord = word.replace(/\b\w+\b/g, (match) => {
       if (exceptions.includes(match.toUpperCase())) {
           // console.log(match);
-        return match.toLowerCase();
+        return match.toUpperCase();
       } else {
         return match.charAt(0).toUpperCase() + match.slice(1).toLowerCase();
       }
@@ -58,7 +58,7 @@ const callAPI = async (leagueIndex) => {
 };
 
 const parseText = async (body, leagueIndex) => {
-  // logger.info(body)
+  const leagueID = body.parameters.league;
   const league = body.response[0].league.standings;
     
   let ids = [];
@@ -103,6 +103,7 @@ const parseText = async (body, leagueIndex) => {
   for (let i = 0; i < names.length; i++) {
     const obj = {
       id: ids[i],
+      League: leagueID,
       Rank: i + 1,
       Played: playeds[i],
       Badge: badges[i],
@@ -122,7 +123,7 @@ const parseText = async (body, leagueIndex) => {
 
 const uploadData = async (object, leagueIndex) => {
   logger.log("Data uploading: " + JSON.stringify(object));
-  const collectionName = String("league" + LEAGUEIDS[leagueIndex]);
+  const collectionName = String("clubs");
   const recordName = String(object.id);
   
   const reference = db.collection(collectionName).doc(recordName)
@@ -132,7 +133,7 @@ const uploadData = async (object, leagueIndex) => {
 
 exports.syncLeagues = functions.https.onRequest(async (req, res) => {
   for (let i = 0; i < LEAGUEIDS.length; i++) {
-    // for (let i = 0; i < ; i++) {
+    // for (let i = 0; i < 1; i++) {
     try {
       await callAPI(i);
     } catch (error) {

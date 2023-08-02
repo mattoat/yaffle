@@ -25,6 +25,8 @@ function Register (){
     const [creds, setCreds] = useState(initialCreds)
     const [error, setError] = useState("");
     const [stage, setStage] = useState(0); // 0 for unregistered, 1 for unverified, 2 for verified
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidUsername = (username) => /^[a-zA-Z0-9_]+$/.test(username);
 
     async function onChange(key, value) {
         setCreds({...creds, [key]: value})
@@ -37,7 +39,8 @@ function Register (){
         await setDoc(doc(db, "usersCollection", uid), {
             "accountCreated": serverTimestamp(),
             "username": `${username}`,
-            "teamsSelected": false
+            "teamsSelected": false,
+            "lookups": 0
         });
 
         await setDoc(doc(db, "lookups", uid), {
@@ -79,6 +82,13 @@ function Register (){
                     setLoading(false);
                     return;
                 }
+            }
+            else if (!isValidEmail(email)) {
+                setError("Invalid Email address.")
+                return;
+            }
+            else if (!isValidUsername(username)) {
+                setError("Invalid username, must contain alphanumeric characters or '_'.")
             }
             else {
                 createUserWithEmailAndPassword(auth, email, password).then((user) => {
@@ -140,7 +150,7 @@ function Register (){
                         <div>
                             <h2>Verify your email before signing in.</h2>
                             <br></br>
-                            <p>We have sent you an email to confirm your email address. Please click the link in the email to complete registration. It should arrive in your inbox within the next couple minutes.</p>
+                            <p>We have sent you an email to confirm your address. Please click the link in the email to complete registration. It should arrive in your inbox within the next couple minutes.</p>
                         </div>
                     )
                     }
