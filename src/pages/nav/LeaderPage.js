@@ -1,4 +1,4 @@
-import { Typography, Card, CircularProgress } from '@mui/material';
+import { Typography, Paper, CircularProgress, Table, TableCell, TableRow, TableHead, TableContainer, TableBody } from '@mui/material';
 import Page from '../../components/Page';
 import {query, collection, where, getFirestore, getDocs} from "firebase/firestore";
 import {useState, useEffect} from 'react';
@@ -52,7 +52,7 @@ export default function LeaderPage() {
 
 
     const getLeaderboard = async (callback) => {
-        let result = {}
+        var result = {}
 
 
         //get array of active users
@@ -133,28 +133,26 @@ export default function LeaderPage() {
                      * ...
                      * ]
                      */
-                    let count = 0;
-                    // count is the ith user in rows
-                    await rows.forEach(async (row) => {
-                        let gamesPlayed = 0;
-                        let points = 0;
-                        let gd = 0;
+                    rows.forEach(async (row) => {
+                        var gamesPlayed = 0;
+                        var points = 0;
+                        var gd = 0;
 
                         let username = row[0];
                         //iterate through each user, and get each club id
                         let clubData = {};
                         const clubIDs = Object.keys(row[1]);
-                        await clubIDs.forEach(async (clubID) => {
+                        for (const clubID of clubIDs) {
                             if (!(clubID > 0)) {
-                                return;
+                                continue;
                             }
                             // for each club id get the relevant club data and store to clubData variable
                             
-                            clubID = Number.parseInt(clubID);
-                            if (localStorage.getItem("club" + clubID)) {
+                            const parsedClubID = Number.parseInt(clubID);
+                            if (localStorage.getItem("club" + parsedClubID)) {
                                 // add applicable data to result
                                 // console.log("Found in local storage");
-                                let cachedData = JSON.parse(localStorage.getItem("club" + clubID));
+                                let cachedData = JSON.parse(localStorage.getItem("club" + parsedClubID));
                                 const d = new Date();
                                 const time = d.getTime();
 
@@ -164,14 +162,15 @@ export default function LeaderPage() {
                             }
 
                             // if the clubData hasn't been cached, get from db
-                            const clubQuery = query(collection(db, "clubs"), where("id", "==", clubID));
+                            const clubQuery = query(collection(db, "clubs"), where("id", "==", parsedClubID));
                             const querySnapshot = await getDocs(clubQuery);
-                            await querySnapshot.forEach((doc) => {
+
+                            querySnapshot.forEach((doc) => {
                                 
                                 clubData = doc.data();
                                 if (clubData !== undefined) {
                                     // cache data found in db
-                                    localStorage.setItem("club" + clubID, JSON.stringify(result));
+                                    localStorage.setItem("club" + parsedClubID, JSON.stringify(clubData));
 
                                     // console.log("rows[" + JSON.stringify(rows[0]) + "][" + JSON.stringify(clubIDs) + "]: " + JSON.stringify(clubData))
                                     // rows[`${rows[0]}`][clubIDs] = clubData;
@@ -180,24 +179,24 @@ export default function LeaderPage() {
                             gamesPlayed += clubData.Played;
                             points += clubData.Points;
                             gd += clubData.GD;
+
                             // here add the clubData to rows
                             // console.log("set rows[" + username + "][" + clubID + "] to " + JSON.stringify(clubData))
-                            result[username][`${clubID}`] = clubData
-                        });
+                            result[username][`${parsedClubID}`] = clubData
+                        };
+
                         result[username]["played"] = gamesPlayed;
                         result[username]["points"] = points;
                         result[username]["gd"] = gd;
-                        
-                        count++;
+                        console.log(result[username]["points"]);
                     });
                     
-                    // console.log(result)
-                    setLeaderboard(result);
+                    setLeaderboard(Object.entries(result).sort(sortComparator));
                     return;
                 }
             });
         }
-
+        
         return () => {
             setLoading(false);
             mounted = false;
@@ -208,10 +207,18 @@ export default function LeaderPage() {
         if (Object.keys(leaderboard).length > 0) {
             setLoading(false);
         }
+        
     }, [leaderboard])
     
-    console.log(leaderboard);
-
+    console.log(leaderboard)
+    const sortComparator = (a, b) => {
+        // Sort by points in descending order
+        return b[1].points - a[1].points;
+      };
+      
+    if (!loading) {
+        // console.log(leaderboard)
+    }
     return (
                 <Page>
                     <br />
@@ -220,13 +227,36 @@ export default function LeaderPage() {
                     <div>
                         {(!loading) && (
                             
-                            <div>
-                                
-                                {JSON.stringify(Object.entries(leaderboard).map((row, index) => (
+                            <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="left">Username</TableCell>
+                                            <TableCell align="center">Games Played</TableCell>
+                                            <TableCell align="center">Goal Difference</TableCell>
+                                            <TableCell align="center">Points</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                <TableBody >
+                                    {(leaderboard.map((entry, index) => {
+                                        // console.log(row[1])
+                                        return (
 
-                                    index
-                                )))}
-                            </div>
+                                        <TableRow
+                                        key={entry[0]}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell align="left" component="th" scope="row">
+                                            {entry[0]}
+                                            </TableCell>
+                                            <TableCell align="center">{entry[1]["played"]}</TableCell>
+                                            <TableCell align="center">{entry[1]["gd"]}</TableCell>
+                                            <TableCell align="center">{entry[1]["points"]}</TableCell>
+                                        </TableRow>
+                                    )}))}
+                                </TableBody>
+                                </Table>
+                            </TableContainer>
                         )}
                         {(loading) && (
                             <CircularProgress />
