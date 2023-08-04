@@ -1,17 +1,20 @@
-import { Typography, Paper, CircularProgress, Table, TableCell, TableRow, TableHead, TableContainer, TableBody } from '@mui/material';
-import Page from '../../components/Page';
+import { Typography, Paper, CircularProgress, Table, TableCell, TableRow, Grid,
+     TableHead, TableContainer, TableBody, useMediaQuery} from '@mui/material';
+import Page from '../../../components/Page';
 import {query, collection, where, getFirestore, getDocs} from "firebase/firestore";
 import {useState, useEffect} from 'react';
-import Firebase from '../../components/firebase/Firebase';
-import leagues from "../../Leagues.json";
+import Firebase from '../../../components/firebase/Firebase';
+import leagues from "../../../Leagues.json";
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import { KeyboardReturnOutlined } from '@material-ui/icons';
+import LeaderboardRow from './LeaderboardRow';
 
 
 export default function LeaderPage() {
     const [leaderboard, setLeaderboard] = useState({});
     const [got, setGot] = useState(false);
     const [loading, setLoading] = useState(true);
+    const isMobile = useMediaQuery('(max-width: 600px)'); 
 
     const db = getFirestore(Firebase.app);
     const TTL = 720000 // 2 hours
@@ -86,13 +89,9 @@ export default function LeaderPage() {
 
     useEffect(() => {
         setLoading(true);
-        // console.log("Mounted")
-        let mounted = true;
         if (!got) {
             // leaderboard data received
             getLeaderboard(async (result) => {
-
-                if(mounted) {
                     /**
                      * received an object with leaderboard data in this form:
                      * 
@@ -190,20 +189,18 @@ export default function LeaderPage() {
                     await Promise.all(promises);
                     setLeaderboard(Object.entries(result).sort(sortComparator));
                     setLoading(false);
-                }
             });
         }
         
         return () => {
             setLoading(false);
-            mounted = false;
             setGot(true);
         }
     }, []);
     useEffect(() => {
         if (Object.keys(leaderboard).length > 0) {
             setLoading(false);
-            console.log(leaderboard[0])
+            // console.log(leaderboard[0])
         }
     }, [leaderboard])
     
@@ -228,39 +225,57 @@ export default function LeaderPage() {
                     <br />
                     <div>
                         {(!loading) && (
-                            
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="left">Username</TableCell>
-                                            <TableCell align="center">Games Played</TableCell>
-                                            <TableCell align="center">Goal Difference</TableCell>
-                                            <TableCell align="center">Points</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                <TableBody >
-                                    {(leaderboard.map((entry, index) => {
-                                        // console.log(typeof(entry[1]))
-                                        const line = entry[1]
-                                        console.log(line);
-                                        return (
+                            <div>
+                                {(isMobile) && (
+                                    <TableContainer component={Paper}>
+                                        <Table aria-label="leaderboard table">
+                                            <TableHead >
+                                                <TableRow>
+                                                    <TableCell align="left">User</TableCell>
+                                                    <TableCell align="center">Played</TableCell>
+                                                    <TableCell align="center">GD</TableCell>
+                                                    <TableCell align="center">Points</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                        <TableBody>
+                                            {(leaderboard.map((entry, index) => {
+                                                // console.log(typeof(entry[1]))
+                                                const line = entry[1]
+                                                // console.log(line);
+                                                return (
+                                                    <LeaderboardRow key={index} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
+                                            )}))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                )}
+                                {(!isMobile) && (
 
-                                        <TableRow
-                                        key={entry[0]}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell align="left" component="th" scope="row">
-                                            {entry[0]}
-                                            </TableCell>
-                                            <TableCell align="center">{line.played}</TableCell>
-                                            <TableCell align="center">{line["gd"]}</TableCell>
-                                            <TableCell align="center">{line["points"]}</TableCell>
-                                        </TableRow>
-                                    )}))}
-                                </TableBody>
-                                </Table>
-                            </TableContainer>
+                                            <TableContainer component={Paper}>
+                                                <Table aria-label="leaderboard table">
+                                                    <TableHead >
+                                                        <TableRow>
+                                                            <TableCell align="left">User</TableCell>
+                                                            <TableCell align="left"></TableCell>
+                                                            <TableCell align="center">Games Played</TableCell>
+                                                            <TableCell align="center">Goal Difference</TableCell>
+                                                            <TableCell align="center">Points</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                <TableBody>
+                                                    {(leaderboard.map((entry, index) => {
+                                                        // console.log(typeof(entry[1]))
+                                                        const line = entry[1]
+                                                        // console.log(line);
+                                                        return (
+                                                            <LeaderboardRow key={index} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
+                                                    )}))}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                            )}
+                            </div>      
+                                        
                         )}
                         {(loading) && (
                             <CircularProgress />
