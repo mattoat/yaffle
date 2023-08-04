@@ -18,7 +18,7 @@ const LeagueSelection = (props) => {
     
     const {index, teamIDs, teamNames, setTeamNames, setTeamIDs} = props;
     let entry = Object.entries(leagues)[index]
-    console.log(entry)
+
     const id = entry[0];
     const name = entry[1];
     const [teams, setTeams] = useState([]);

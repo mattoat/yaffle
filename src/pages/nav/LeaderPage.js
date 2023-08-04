@@ -239,7 +239,7 @@ export default function LeaderPage() {
                                     </TableHead>
                                 <TableBody >
                                     {(leaderboard.map((entry, index) => {
-                                        // console.log(row[1])
+                                        console.log(entry[1])
                                         return (
 
                                         <TableRow

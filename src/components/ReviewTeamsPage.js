@@ -1,6 +1,6 @@
 import { List, ListItem, Typography, Button, Table, TableRow, TableBody, TableHead, TableContainer, Paper, TableCell, CircularProgress } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { getFirestore, serverTimestamp, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, serverTimestamp, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { UserDataContext } from "../App";
 import Firebase from "./firebase/Firebase";
@@ -26,28 +26,54 @@ const ReviewTeamsPage = (props) => {
         }
     }, [])
 
-
-    const submitTeams = async () => {
+    const getOffset = () => {
+        return new Promise((resolve) => {
+          const app = Firebase.app;
+          const db = getFirestore(app);
+          let offsetNum = 0;
+      
+          const promises = teamIDsArray.map(async (teamID) => {
+            const clubRef = doc(db, "clubs/" + teamID[1]);
+            const docSnap = await getDoc(clubRef);
+      
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              offsetNum += data.Points;
+              console.log(offsetNum)
+            }
+          });
+      
+          Promise.all(promises).then(() => {
+            resolve(offsetNum);
+          });
+        });
+      };
+      
+      const submitTeams = async () => {
         setLoading(true);
-
+      
         const app = Firebase.app;
         const db = getFirestore(app);
-
+      
         setUserData(getAuth(app).currentUser);
-
+        const offsetNum = await getOffset();
+      
         const uid = userData.uid;
-
-        const ref = doc(db, "usersCollection", uid);
-        await updateDoc(ref, {
-            ...teamIDs,
-            timestamp: serverTimestamp(),
-            teamsSelected: true
-        });
-
-        setLoading(false);
-        setStage(2);
-
+      
+            const ref = doc(db, "usersCollection", uid);
+            await updateDoc(ref, {
+                ...teamIDs,
+                offset: `${offsetNum}`,
+                timestamp: serverTimestamp(),
+                teamsSelected: true
+            });
+            
+            setLoading(false);
+            setStage(2);
+            
+        // });
     }
+
 
     return (
         <div >
@@ -81,8 +107,7 @@ const ReviewTeamsPage = (props) => {
                                         <TableBody>
                                         {teamIDsArray.map((team, index) => {
 
-                                            let leagueName = Object.keys(leagues)[index];
-
+                                            let leagueName = Object.entries(leagues)[index][1];
                                         
                                             return (
                                                 <TableRow

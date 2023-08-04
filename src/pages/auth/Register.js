@@ -40,7 +40,7 @@ function Register (){
             "accountCreated": serverTimestamp(),
             "username": `${username}`,
             "teamsSelected": false,
-            "lookups": 0
+            "offset": 0
         });
 
         await setDoc(doc(db, "lookups", uid), {
