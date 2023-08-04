@@ -125,6 +125,7 @@ export default function LeaderPage() {
                     // console.log(result);
 
                     const rows = Object.entries(result);
+                    const promises = rows.map(async (row) => {
                     // rows is now an array of tuples
                     /**
                      * [
@@ -133,7 +134,7 @@ export default function LeaderPage() {
                      * ...
                      * ]
                      */
-                    rows.forEach(async (row) => {
+
                         var gamesPlayed = 0;
                         var points = 0;
                         var gd = 0;
@@ -171,9 +172,6 @@ export default function LeaderPage() {
                                 if (clubData !== undefined) {
                                     // cache data found in db
                                     localStorage.setItem("club" + parsedClubID, JSON.stringify(clubData));
-
-                                    // console.log("rows[" + JSON.stringify(rows[0]) + "][" + JSON.stringify(clubIDs) + "]: " + JSON.stringify(clubData))
-                                    // rows[`${rows[0]}`][clubIDs] = clubData;
                                 };
                             });
                             gamesPlayed += clubData.Played;
@@ -181,18 +179,17 @@ export default function LeaderPage() {
                             gd += clubData.GD;
 
                             // here add the clubData to rows
-                            // console.log("set rows[" + username + "][" + clubID + "] to " + JSON.stringify(clubData))
                             result[username][`${parsedClubID}`] = clubData
                         };
 
                         result[username]["played"] = gamesPlayed;
                         result[username]["points"] = points;
                         result[username]["gd"] = gd;
-                        console.log(result[username]["points"]);
+                        // console.log(result[username]["points"]);
                     });
-                    
+                    await Promise.all(promises);
                     setLeaderboard(Object.entries(result).sort(sortComparator));
-                    return;
+                    setLoading(false);
                 }
             });
         }
@@ -206,12 +203,17 @@ export default function LeaderPage() {
     useEffect(() => {
         if (Object.keys(leaderboard).length > 0) {
             setLoading(false);
+            console.log(leaderboard[0])
         }
-        
     }, [leaderboard])
     
-    console.log(leaderboard)
     const sortComparator = (a, b) => {
+        if (b[1].points == a[1].points) {
+            if (b[1].gd == a[1].gd) {
+                return b[1].played - a[1].played;
+            }
+            return b[1].gd - a[1].gd;
+        }
         // Sort by points in descending order
         return b[1].points - a[1].points;
       };
@@ -239,7 +241,9 @@ export default function LeaderPage() {
                                     </TableHead>
                                 <TableBody >
                                     {(leaderboard.map((entry, index) => {
-                                        console.log(entry[1])
+                                        // console.log(typeof(entry[1]))
+                                        const line = entry[1]
+                                        console.log(line);
                                         return (
 
                                         <TableRow
@@ -249,9 +253,9 @@ export default function LeaderPage() {
                                             <TableCell align="left" component="th" scope="row">
                                             {entry[0]}
                                             </TableCell>
-                                            <TableCell align="center">{entry[1]["played"]}</TableCell>
-                                            <TableCell align="center">{entry[1]["gd"]}</TableCell>
-                                            <TableCell align="center">{entry[1]["points"]}</TableCell>
+                                            <TableCell align="center">{line.played}</TableCell>
+                                            <TableCell align="center">{line["gd"]}</TableCell>
+                                            <TableCell align="center">{line["points"]}</TableCell>
                                         </TableRow>
                                     )}))}
                                 </TableBody>

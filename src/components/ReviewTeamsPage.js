@@ -15,7 +15,6 @@ const ReviewTeamsPage = (props) => {
     const l = Object.keys(teamIDs).length
     const [loading, setLoading] = useState(false);
     const [stage, setStage] = useState(0); // 0 for incomplete selection, 1 for complete selection, 2 for submitted 
-    const [fullyComplete, setFullyComplete] = useState(false);
     const {userData, setUserData} = useContext(UserDataContext);
     let teamIDsArray = Object.entries(teamIDs)
 
@@ -39,7 +38,6 @@ const ReviewTeamsPage = (props) => {
             if (docSnap.exists()) {
               const data = docSnap.data();
               offsetNum += data.Points;
-              console.log(offsetNum)
             }
           });
       
