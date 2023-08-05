@@ -3,7 +3,7 @@ import React, {useContext, useState, useEffect} from 'react'
 import Layout from'./pages/nav/Layout';
 import RulesPage from './pages/nav/RulesPage';
 import LeaderPage from './pages/nav/Leaderboard/LeaderPage';
-import LeaguePage from './pages/nav/LeaguePage';
+import LeaguePage from './pages/nav/Leagues/LeaguePage';
 import HomePage from './pages/nav/HomePage';
 
 import Logout from './pages/auth/Logout';

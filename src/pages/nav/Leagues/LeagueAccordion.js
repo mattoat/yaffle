@@ -5,7 +5,7 @@ import { collection, query, where, doc, getDocs, getFirestore, orderBy } from "f
 import { styled } from '@mui/material/styles';
 import 'firebase/firestore';
 import { tableCellClasses } from '@mui/material/TableCell';
-import { themeOptions } from '../styles/theme';
+import { themeOptions } from '../../../styles/theme';
 
 const LeagueAccordion = ( league ) => {
 // console.log(league)

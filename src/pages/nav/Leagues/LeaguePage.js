@@ -1,11 +1,11 @@
-import Page from '../../components/Page';
+import Page from '../../../components/Page';
 import {Accordion, Card, AccordionDetails, Icon} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import LeagueAccordion from "../../components/LeagueAccordion";
-import { styles } from '../../styles/styles';
+import LeagueAccordion from "./LeagueAccordion";
+import { styles } from '../../../styles/styles';
 
-const leagues = require ( "../../Leagues")
+const leagues = require ( "../../../Leagues")
 
 export default function LeaguePage() {
   return(
