@@ -42,7 +42,7 @@ useEffect(() => {
 
 return (
     <PictureFrame>
-            <img src={avatarUrl} alt="User Avatar" width="100%" height="auto" />
+            <img src={avatarUrl} style={{ width: '100%', height: '100%', objectFit: 'cover'}} alt="User Avatar" width="100%" height="auto" />
     </PictureFrame>
 );
 }

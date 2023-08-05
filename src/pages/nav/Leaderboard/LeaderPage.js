@@ -254,8 +254,9 @@ export default function LeaderPage() {
                                                 <Table aria-label="leaderboard table">
                                                     <TableHead >
                                                         <TableRow>
-                                                            <TableCell align="left">User</TableCell>
+                                                            <TableCell align="left">Rank</TableCell>
                                                             <TableCell align="left"></TableCell>
+                                                            <TableCell align="left">User</TableCell>
                                                             <TableCell align="center">Games Played</TableCell>
                                                             <TableCell align="center">Goal Difference</TableCell>
                                                             <TableCell align="center">Points</TableCell>

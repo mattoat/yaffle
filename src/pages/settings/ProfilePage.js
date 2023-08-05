@@ -30,10 +30,11 @@ const Line = styled.div`
 `
 
 const PictureFrame = styled.div`
+    objectFit: cover;
     float: center;
     border: 3px solid #ff8d26;
     border-radius: 50%;
-    width: 200px;
+    width: 200px;   
     height: 200px;
     margin: 20px;
     display: inline-block;
@@ -119,13 +120,6 @@ export default function ProfilePage() {
     const onOpenFileDialog = () => {
         fileInput.current.click();
     };
-
-    const onLoad = useCallback((img) => {
-        const imageAspectRatio = img.naturalWidth / img.naturalHeight;
-        const cropAspectRatio = 1; // Square aspect ratio
-        const aspect = imageAspectRatio / cropAspectRatio;
-        setCrop({ ...crop, aspect });
-      }, [crop]);
 
     const onProcessFile = async (e) => {
         setImageLoading(true);

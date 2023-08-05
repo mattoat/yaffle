@@ -33,14 +33,16 @@ const LeaderboardRow = (props) => {
                     <TableRow>
                         <TableCell style={{overflow:Hidden, paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                             <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Box >
-                                    <Typography variant="h6" fontSize={"12px"} gutterBottom component="div">
-                                        {username}
-                                    </Typography>
-                                    {badgeURLs.map((badgeURL, index) => (
-                                        
-                                        <Badge key={index} url={badgeURL} />
+                                <Box style={{"marginTop":"10px"}}>
+                                    <>
+                                        <Typography variant="h6" fontSize={"12px"} gutterBottom component="div">
+                                            {username}
+                                        </Typography>
+                                        {badgeURLs.map((badgeURL, index) => (
+                                            
+                                            <Badge key={index} url={badgeURL} />
                                         ))}
+                                    </>
                                 </Box>
                             </Collapse>
                         </TableCell>
@@ -65,18 +67,19 @@ const LeaderboardRow = (props) => {
                         <Box style={{"marginTop":"10px"}}>
                             {/* <Typography variant="h6" fontSize={"12px"} gutterBottom component="div">
                                 {username}
-                            </Typography> */}
-                            {badgeURLs.map((badgeURL, index) => (
+                                </Typography> */}
+                                <>
+                                {badgeURLs.map((badgeURL, index) => (
 
-                            <Badge key={index} url={badgeURL} />
-                            ))}
+                                <Badge key={index} url={badgeURL} />
+                                ))}
+                            </>
                         </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>
             </>
             )}
-            
         </>
     )
 }
