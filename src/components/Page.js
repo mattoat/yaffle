@@ -12,8 +12,6 @@ const Frame = styled.div`
 `
 const paperStyle = {
     paddingTop: '6%',
-    paddingLeft: '5%',
-    paddingRight: '5%',
     paddingBottom: '6%',
     backgroundColor: '#F9FBFF',
     textAlign:'center',

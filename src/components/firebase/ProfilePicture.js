@@ -50,8 +50,9 @@ export async function setProfilePicture(file, callback) {
             
             localStorage.setItem("profilePic", url);
 
-            console.log("Uploaded successfully");
-            console.log("New url: " + url);
+            // console.log("Uploaded successfully");
+            // console.log("New url: " + url);
+
             profileURL = url;
             callback(url);
         })

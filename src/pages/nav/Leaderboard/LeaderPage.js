@@ -66,6 +66,7 @@ export default function LeaderPage() {
             let userObj = {};
 
             const user = doc.data();
+            const uid = doc.id
             
             //get array of their teams
             const leagueIDs = Object.keys(leagues);
@@ -75,14 +76,13 @@ export default function LeaderPage() {
                 userObj[clubID] = {};
                 
             })
+            userObj['uid'] = uid;
             userObj['offset'] = user["offset"];
             result[`${user.username}`] = userObj;
         });
 
             // add total gd, games played and points to the userObj
             
-            //  add userObj to result
-        // console.log("callback " + JSON.stringify(result));
         callback(result);
     }
 
@@ -231,7 +231,9 @@ export default function LeaderPage() {
                                         <Table aria-label="leaderboard table">
                                             <TableHead >
                                                 <TableRow>
-                                                    <TableCell align="left">User</TableCell>
+                                                    <TableCell align="left">Rank</TableCell>
+                                                    <TableCell align="left"></TableCell>
+                                                    {/* <TableCell align="left">User</TableCell> */}
                                                     <TableCell align="center">Played</TableCell>
                                                     <TableCell align="center">GD</TableCell>
                                                     <TableCell align="center">Points</TableCell>
@@ -239,11 +241,8 @@ export default function LeaderPage() {
                                             </TableHead>
                                         <TableBody>
                                             {(leaderboard.map((entry, index) => {
-                                                // console.log(typeof(entry[1]))
-                                                const line = entry[1]
-                                                // console.log(line);
                                                 return (
-                                                    <LeaderboardRow key={index} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
+                                                    <LeaderboardRow key={index} index={index + 1} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
                                             )}))}
                                         </TableBody>
                                     </Table>
@@ -263,13 +262,9 @@ export default function LeaderPage() {
                                                         </TableRow>
                                                     </TableHead>
                                                 <TableBody>
-                                                    {(leaderboard.map((entry, index) => {
-                                                        // console.log(typeof(entry[1]))
-                                                        const line = entry[1]
-                                                        // console.log(line);
-                                                        return (
-                                                            <LeaderboardRow key={index} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
-                                                    )}))}
+                                                    {(leaderboard.map((entry, index) => (
+                                                            <LeaderboardRow key={index} index={index + 1} name={entry[0]} isMobile={isMobile} entry={entry[1]} />
+                                                    )))}
                                                 </TableBody>
                                             </Table>
                                         </TableContainer>

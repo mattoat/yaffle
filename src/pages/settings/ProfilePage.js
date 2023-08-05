@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Page from '../../components/Page';
 import styled from '@emotion/styled';
 import { styles } from '../../styles/styles'; //styles={styles.alignLeft}
@@ -7,10 +7,13 @@ import imageCompression from 'browser-image-compression';
 import { green } from '@mui/material/colors';
 import {UserDataContext, AvatarContext} from '../../App';
 import {getFirestore, collection, doc, getDoc, query, where, getDocs} from 'firebase/firestore';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 import Firebase from '../../components/firebase/Firebase.js';
 import { setProfilePicture } from '../../components/firebase/ProfilePicture.js';
 import { getAuth } from 'firebase/auth';
+import ImageCropComponent from './ImageCropComponent';
 
 
 
@@ -25,6 +28,7 @@ const Line = styled.div`
     text-align:left;
     padding: 10px;
 `
+
 const PictureFrame = styled.div`
     float: center;
     border: 3px solid #ff8d26;
@@ -42,13 +46,6 @@ const PictureFrame = styled.div`
       }
       
 `
-
-const imgStyle = {
-    objectFit:'contain',
-    width:'200px',
-    height: '200px',
-}
-
 export default function ProfilePage() {
     
     const [loading, setLoading] = useState(false);
@@ -58,7 +55,10 @@ export default function ProfilePage() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [extraData, setExtraData] = useState({});
-    
+    const [upImg, setUpImg] = useState(null);
+    const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 1 }); // Aspect ratio set to 1:1 for a square crop
+    const [completedCrop, setCompletedCrop] = useState(null);
+
     const {userData, setUserData} = useContext(UserDataContext);
     const {avatar, setAvatar} = useContext(AvatarContext);
     
@@ -120,11 +120,21 @@ export default function ProfilePage() {
         fileInput.current.click();
     };
 
+    const onLoad = useCallback((img) => {
+        const imageAspectRatio = img.naturalWidth / img.naturalHeight;
+        const cropAspectRatio = 1; // Square aspect ratio
+        const aspect = imageAspectRatio / cropAspectRatio;
+        setCrop({ ...crop, aspect });
+      }, [crop]);
+
     const onProcessFile = async (e) => {
         setImageLoading(true);
         e.preventDefault();
 
         let file = e.target.files[0];
+        const reader = new FileReader();
+        reader.addEventListener('load', () => setUpImg(reader.result));
+        reader.readAsDataURL(file);
 
         const options = {
             maxSizeMB: 1,
@@ -144,6 +154,7 @@ export default function ProfilePage() {
               console.log(url);
               setAvatar(url);
               setImageLoading(false);
+              
             });  
             setImageLoading(false);
         }
@@ -184,6 +195,7 @@ export default function ProfilePage() {
                                 />
                         <img width="max-content" height="max-content" onClick={onOpenFileDialog} src={avatar} width='100%' height='auto' />
                         </PictureFrame>
+                        {/* <ImageCropComponent avatar={avatar} /> */}
                         
                 <Line>
                     <Title >Full name: </Title> 
@@ -191,7 +203,6 @@ export default function ProfilePage() {
                 </Line>
                 <Line>
                     <Title >Username:</Title>
-                    {/* <TextField disabled style={styles.rightFloat} name="username" label={userdata.username} color="secondary" /><br /> <br /> */}
                     <TextField disabled style={styles.rightFloat} name="username" label={username} color="secondary" /><br /> <br />
                 </Line>
                 <Line>
