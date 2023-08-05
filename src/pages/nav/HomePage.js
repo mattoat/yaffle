@@ -41,7 +41,7 @@ export default function HomePage() {
             </Typography>
             <Typography variant='h6'>Tech Stack.</Typography>
             <Typography variant='body1'>
-                The front end of the web app is developped using React, all of the code for it can be 
+                The front end of the web app is developed using ReactJS, all of the code for it can be 
                 found on my <a href="https://github.com/oates-matthew/yaffle">Github.</a> The backend is
                 through Google Firebase. Yaffle also uses an API service to obtain all its football data. 
                 Huge appreciation for <a href="https://www.api-football.com/">API-football</a>, which is an entirely free and great resource that Yaffle relies on.

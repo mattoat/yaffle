@@ -18,6 +18,7 @@ const LeaderboardRow = (props) => {
     const [open, setOpen] = useState(false);
 
     const toggleOpen = () => setOpen(!open);
+    console.log(badgeURLs)
 
     return (
             <>
@@ -38,9 +39,9 @@ const LeaderboardRow = (props) => {
                                         <Typography variant="h6" fontSize={"12px"} gutterBottom component="div">
                                             {username}
                                         </Typography>
-                                        {badgeURLs.map((badgeURL, index) => (
+                                        {badgeURLs.map((club) => (
                                             
-                                            <Badge key={index} url={badgeURL} />
+                                            <Badge key={club.League} club={club} />
                                         ))}
                                     </>
                                 </Box>
@@ -59,7 +60,7 @@ const LeaderboardRow = (props) => {
                     </TableCell>
                     <TableCell align="center">{entry.played}</TableCell>
                     <TableCell align="center">{entry.gd}</TableCell>
-                    <TableCell align="center">{entry.points- entry.offset}</TableCell>
+                    <TableCell align="center">{entry.points}</TableCell>
                 </TableRow>
                 <TableRow>
                 <TableCell style={{overflow:Hidden, paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -69,9 +70,9 @@ const LeaderboardRow = (props) => {
                                 {username}
                                 </Typography> */}
                                 <>
-                                {badgeURLs.map((club, index) => (
+                                {badgeURLs.map((club) => (
 
-                                <Badge key={index} club={club} />
+                                <Badge key={club.League} club={club} />
                                 ))}
                             </>
                         </Box>

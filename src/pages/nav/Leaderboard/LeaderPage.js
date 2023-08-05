@@ -77,7 +77,8 @@ export default function LeaderPage() {
                 
             })
             userObj['uid'] = uid;
-            userObj['offset'] = user["offset"];
+            userObj['offset'] = Number.parseInt(user["offset"]);
+            userObj['points'] = userObj["points"] - user["offset"];
             result[`${user.username}`] = userObj;
         });
 
@@ -182,7 +183,7 @@ export default function LeaderPage() {
                         };
 
                         result[username]["played"] = gamesPlayed;
-                        result[username]["points"] = points;
+                        result[username]["points"] = points - result[username]["offset"];
                         result[username]["gd"] = gd;
                         // console.log(result[username]["points"]);
                     });

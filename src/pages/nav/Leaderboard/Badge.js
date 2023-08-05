@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { Tooltip } from "@mui/material";
 const Badge = (props) => {
     const club = props.club;
+    console.log(props)
 
     const BadgeHolder = styled.img`
     height:30px;
