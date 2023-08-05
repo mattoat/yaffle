@@ -11,7 +11,7 @@ const LeaderboardRow = (props) => {
     const entry = props.entry;
     const badgeURLs = Object.values(entry)
     .filter((value) => typeof value === "object" && value !== null) // Filter out primitive values
-    .map((badge) => badge.Badge);
+    .map((club) => (club));
   
     // console.log(badgeURLs);
 
@@ -69,9 +69,9 @@ const LeaderboardRow = (props) => {
                                 {username}
                                 </Typography> */}
                                 <>
-                                {badgeURLs.map((badgeURL, index) => (
+                                {badgeURLs.map((club, index) => (
 
-                                <Badge key={index} url={badgeURL} />
+                                <Badge key={index} club={club} />
                                 ))}
                             </>
                         </Box>
