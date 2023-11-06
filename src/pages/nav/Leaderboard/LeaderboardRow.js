@@ -18,7 +18,6 @@ const LeaderboardRow = (props) => {
     const [open, setOpen] = useState(false);
 
     const toggleOpen = () => setOpen(!open);
-    console.log(badgeURLs)
 
     return (
             <>

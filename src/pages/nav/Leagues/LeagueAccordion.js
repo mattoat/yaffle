@@ -18,7 +18,7 @@ const LeagueAccordion = ( league ) => {
   const db = getFirestore();
   const BADGEURL = "https://media.api-sports.io/football/";
   const docs = [];
-  const TTL = 86400000 // 24 hours
+  const TTL = 3600000 // 1 hour
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {

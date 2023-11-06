@@ -1,6 +1,10 @@
 import { CenterFocusStrong } from "@material-ui/icons";
 
 export const styles = {
+  
+    avatar: {
+      
+    },
     rightFloat: {
       float: 'right'
     },
