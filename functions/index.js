@@ -21,10 +21,10 @@ const SEASON = 2023;
 const capitalizeName = (str) => {
 
   let words = str.split(" ");
-  const exceptions = ["AC", "VFB", "VFL", "VSV", "SC", "RB", "AS", "QPR","FC","PSG"];
+  const exceptions = ["AC", "SV", "FSV", "CF", "VFB", "VFL", "VSV", "SC", "RB", "AS", "QPR","FC","PSG"];
 
   const capitalizedWords = words.map((word) => {
-    const modifiedWord = word.replace(/\b\w+\b/g, (match) => {
+    const modifiedWord = word.replace(/\b\w{2,}\b/g, (match) => {
       if (exceptions.includes(match.toUpperCase())) {
           // console.log(match);
         return match.toUpperCase();
@@ -131,13 +131,15 @@ const uploadData = async (object, leagueIndex) => {
 };
 // const main = (async() => {
 
-exports.syncLeagues = functions.https.onRequest(async (req, res) => {
+// executes between 12pm - 10pm every day at half past the hour
+exports.syncLeagues = functions.pubsub.schedule("30 12-22 * * *")
+.timeZone("Europe/London").onRun( async (req, res) => {
   for (let i = 0; i < LEAGUEIDS.length; i++) {
     // for (let i = 0; i < 1; i++) {
     try {
       await callAPI(i);
     } catch (error) {
-      logger.error(`Error in loop for league ID ${LEAGUEIDS[i]}: `, error);
+      logger.error("Error in loop for league ID ${LEAGUEIDS[i]}: ", error);
     }
   }
   res.json({"Status": "Success"});
