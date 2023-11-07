@@ -13,11 +13,11 @@ const getUsers = async () => {
       .get();
 
   const users = querySnapshot.docs.map((doc) => {
-      let result = doc.data();
-      result = {...result, uid: doc.id}
-      return result;
-    });
-    logger.info(users);
+    let result = doc.data();
+    result = {...result, uid: doc.id};
+    return result;
+  });
+  logger.info(users);
   return users;
 };
 
@@ -33,9 +33,9 @@ const getClub = async (clubID) => {
   return clubData[0];
 };
 
-exports.update_leaderboard = functions.https.onRequest(async (req, res) => {
-// exports.update_leaderboard = functions.pubsub.schedule("15 11-23 * * *")
-//     .timeZone("Europe/London").onRun(async (req, res) => {
+// exports.update_leaderboard = functions.https.onRequest(async (req, res) => {
+exports.update_leaderboard = functions.pubsub.schedule("15 11-23 * * *")
+    .timeZone("Europe/London").onRun(async (req, res) => {
       const clubs = {};
       const collectionRef = db.collection("leaderboard");
       const batch = db.batch();
@@ -45,7 +45,7 @@ exports.update_leaderboard = functions.https.onRequest(async (req, res) => {
 
         for (let i = 0; i < users.length; i++) {
           const user = users[i];
-        //   logger.info(user)
+
           let points = 0;
           let played = 0;
           let gd = 0;

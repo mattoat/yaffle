@@ -5,7 +5,7 @@ import Badge from './Badge';
 
 
 const LeaderboardRow = (props) => {
-    const username = props.name;
+    const username = props.username;
     const isMobile = props.isMobile;
     const index = props.index;
     const entry = props.entry;
@@ -36,7 +36,7 @@ const LeaderboardRow = (props) => {
                                 <Box style={{"marginTop":"10px"}}>
                                     <>
                                         <Typography variant="h6" fontSize={"12px"} gutterBottom component="div">
-                                            {username}
+                                            {entry.username}
                                         </Typography>
                                         {badgeURLs.map((club) => (
                                             
