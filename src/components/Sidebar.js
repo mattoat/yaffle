@@ -7,53 +7,55 @@ import MenuIcon from '@mui/icons-material/Menu';
 const Sidebar = (props) => {
     const [drawer, setDrawer] = useState(false);
 
-
-  const {userData, setUserData} = useContext(UserDataContext)
-
   const toggleDrawer = (b) => {
     setDrawer(b);
   };
 
-  let matches = false;
-  if (userData != null) {
-    matches = true
-    console.log(userData)
-  }
 
-
+  console.log(props.pages)
   return (
-      <div >
-        { matches && (
-            <div style={{gridColumnStart:'1'}}>
-                <IconButton alignItems="center" color="inherit" aria-label="menu" onClick={() => {toggleDrawer(true)}}>
-                    <MenuIcon />
-                </IconButton>
-            <Drawer
-                style={{"color": "#d06100"}}
-                anchor={'left'}
-                open={drawer}
-                onClose={ () => {toggleDrawer(false)}}
-            >
-                <List>
-                    {props.pages.map((text, index) => (
-                        <Link 
-                            to={"/" + text}
-                            style={{ textDecoration: 'strong', color: "#0c3914" }}
-                            key={text}
-                            >
+
+    <div style={{gridColumnStart:'1'}}>
+            <IconButton alignitems="center" color="inherit" aria-label="menu" onClick={() => {toggleDrawer(true)}}>
+                <MenuIcon />
+            </IconButton>
+        <Drawer
+            style={{"color": "#d06100"}}
+            anchor={'left'}
+            open={drawer}
+            onClose={ () => {toggleDrawer(false)}}
+        >
+            <List>
+                {props.pages.map((text, index) => (
+                    <div key = {index}>
+
                         <ListItem>
-                        <ListItemButton onClick={() => {toggleDrawer(false)}}>
-                            <ListItemText primary={text}/>
-                        </ListItemButton>
-                        </ListItem>
-                            </Link>
-                    ))}
-                </List>
-            </Drawer>
-            </div>
-        )}
-    </div>
-  )
+                            {text != "Messageboard" && text != "Transfers" && (
+                                <Link 
+                                to={"/" + text}
+                                style={{ textDecoration: 'strong', color: "#0c3914" }}
+                                key={text}
+                                >
+                                
+                                <ListItemButton onClick={() => {toggleDrawer(false)}}>
+                                <ListItemText primary={text}/>
+                                </ListItemButton>
+                        </Link>
+
+                            )}
+                            {(text == "Messageboard" || text == "Transfers") && (
+                                <ListItemButton disabled onClick={() => {toggleDrawer(false)}}>
+                                <ListItemText primary={text}/>
+                                </ListItemButton>
+
+                            )}
+                            </ListItem>
+                    </ div>
+                ))}
+            </List>
+        </Drawer>
+        </div>
+  );
 }
 
 export default Sidebar

@@ -1,5 +1,5 @@
 import { Typography, Box, Collapse, Table, TableCell, TableRow, Accordion, AccordionSummary, AccordionDetails, TableHead, TableContainer, TableBody, Hidden } from '@mui/material';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import LeaderboardAvatar from './LeaderboardAvatar';
 import Badge from './Badge';
 
@@ -9,11 +9,11 @@ const LeaderboardRow = (props) => {
     const isMobile = props.isMobile;
     const index = props.index;
     const entry = props.entry;
-    const badgeURLs = Object.values(entry)
+
+    const badgeURLs = Object.values(entry.entry)
     .filter((value) => typeof value === "object" && value !== null) // Filter out primitive values
     .map((club) => (club));
   
-    // console.log(badgeURLs);
 
     const [open, setOpen] = useState(false);
 
@@ -55,7 +55,7 @@ const LeaderboardRow = (props) => {
                     <TableCell align="center">{index}</TableCell>
                     <TableCell align="left"><LeaderboardAvatar uid={entry.uid} /></TableCell>
                     <TableCell align="left" component="th" scope="row">
-                    {username}
+                    {entry.username}
                     </TableCell>
                     <TableCell align="center">{entry.played}</TableCell>
                     <TableCell align="center">{entry.gd}</TableCell>

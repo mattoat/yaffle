@@ -8,7 +8,7 @@ import {getAuth, onAuthStateChanged} from "firebase/auth";
 export default function Layout(props) {
     
     const initSettings = ['Sign Up / Log In'];
-    const initPages = [];
+    const initPages = ['Rules', 'Leaderboard', 'Leagues', 'Transfers', 'Messageboard'];
 
     const [pages, updatePages] = useState(initPages)
     const [settings, updateSettings] = useState(initSettings)
@@ -21,7 +21,7 @@ export default function Layout(props) {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
+
         setUserData(user);
       } 
       else {
@@ -35,7 +35,6 @@ export default function Layout(props) {
   useEffect(() => {
     
     if(userData != null && userData.emailVerified) {
-        updatePages(['Rules', 'Leaderboard', 'Leagues'])
         updateSettings(['Profile', 'Log Out'])
     }
     else{

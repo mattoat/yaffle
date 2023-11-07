@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {AppBar, Box, Toolbar,
-  IconButton, Typography, Tooltip, Avatar,
-   ListItemButton, ListItem, List,
-   ListItemText, Drawer, useScrollTrigger,
-    Slide, useMediaQuery} from '@mui/material/';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Link, useLocation } from 'react-router-dom';
-import AppMenu from './AppMenu';
-import { useState, useContext, useEffect } from 'react';
+import {AppBar, Toolbar, Typography, useScrollTrigger,
+    Slide} from '@mui/material/';
+import { Link } from 'react-router-dom';
 import ProfilePicture from './ProfilePicture';
 import Sidebar from './Sidebar';
 
@@ -16,7 +10,6 @@ const logo = "/assets/FullLogoWhite.svg";
 const sticky = {
   position: 'sticky'
 };
-
 
 function HideOnScroll(props) {
   const { children, window } = props;
@@ -31,9 +24,7 @@ function HideOnScroll(props) {
   );
 }
 
-
 const AppNavBar = (props) => {
-  
 
   return (
     <HideOnScroll >
