@@ -5,6 +5,8 @@ import RulesPage from './pages/nav/RulesPage';
 import LeaderPage from './pages/nav/Leaderboard/LeaderPage';
 import LeaguePage from './pages/nav/Leagues/LeaguePage';
 import HomePage from './pages/nav/HomePage';
+import TransferPage from './pages/nav/TransferPage';
+import MessagePage from './pages/nav/MessagePage';
 
 import Logout from './pages/auth/Logout';
 import ProfilePage from './pages/settings/ProfilePage';
@@ -48,6 +50,8 @@ export default function RouterComponent() {
               <Route path='leaderboard'element={ <LeaderPage /> } />
               <Route path='leagues' element={ <LeaguePage />} />
               <Route path='select_teams' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
+              <Route path='transfer' element={<RequireAuth> <TransferPage /> </RequireAuth>} />
+              <Route path='message' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
               <Route path='rules' element={<RulesPage /> } /> 
               <Route path='profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>} /> 
               <Route path='*'  element={<Navigate replace to="/" />}/>

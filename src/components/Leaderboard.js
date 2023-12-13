@@ -19,7 +19,7 @@ const Leaderboard = () => {
 
         const leaderboardRef = collection(db, "leaderboard");
 
-        const q = query(leaderboardRef, orderBy("points", "desc"));
+        const q = query(leaderboardRef, orderBy("points", "desc"), orderBy("gd", "desc"));
         
         const querySnapshot = await getDocs(q);
             
