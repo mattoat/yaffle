@@ -50,7 +50,7 @@ export default function RouterComponent() {
               <Route path='leaderboard'element={ <LeaderPage /> } />
               <Route path='leagues' element={ <LeaguePage />} />
               <Route path='select_teams' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
-              <Route path='transfer' element={<RequireAuth> <TransferPage /> </RequireAuth>} />
+              <Route path='transfers' element={<RequireAuth> <TransferPage /> </RequireAuth>} />
               <Route path='message' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
               <Route path='rules' element={<RulesPage /> } /> 
               <Route path='profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>} /> 

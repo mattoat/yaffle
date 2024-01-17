@@ -10,9 +10,6 @@ const Sidebar = (props) => {
   const toggleDrawer = (b) => {
     setDrawer(b);
   };
-
-
-  console.log(props.pages)
   return (
 
     <div style={{gridColumnStart:'1'}}>
@@ -30,7 +27,7 @@ const Sidebar = (props) => {
                     <div key = {index}>
 
                         <ListItem>
-                            {text != "Messageboard" && text != "Transfers" && (
+                            {text != "Messageboard" && (
                                 <Link 
                                 to={"/" + text}
                                 style={{ textDecoration: 'strong', color: "#0c3914" }}
@@ -43,7 +40,7 @@ const Sidebar = (props) => {
                         </Link>
 
                             )}
-                            {(text == "Messageboard" || text == "Transfers") && (
+                            {(text == "Messageboard" ) && (
                                 <ListItemButton disabled onClick={() => {toggleDrawer(false)}}>
                                 <ListItemText primary={text}/>
                                 </ListItemButton>

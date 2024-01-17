@@ -7,6 +7,7 @@ const Badge = (props) => {
     height:30px;
     width: auto;
     margin: 1px;
+    margin-right: 7px;
     `
 
     const url = props.url;
