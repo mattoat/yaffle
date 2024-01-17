@@ -292,7 +292,7 @@ export default function TransferPage() {
                         </Typography>
                         <List component="nav" aria-label="main mailbox folders">
                         {leagueTransfer.map((club) => {
-                          if (teamOut.Played > club.played) return (
+                          if (teamOut.Played > club.Played) return (
                           <ListItemButton disabled key={club["ID"]} onClick={() => {
                             setTeamIn(club); 
                             handleSelectIn(club); 
