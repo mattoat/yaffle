@@ -288,11 +288,11 @@ export default function TransferPage() {
                         <br />
                         <Typography variant='body'>
                           You have Selected {teamOut.Name}, who have played <strong>{teamOut.Played} matches</strong>, and are currently on <strong>{teamOut.Points} points</strong>. You can only select teams 
-                          that have played the same number of games or less.
+                          that have played the same number of games or more.
                         </Typography>
                         <List component="nav" aria-label="main mailbox folders">
                         {leagueTransfer.map((club) => {
-                          if (club.Played > teamOut.Played) return (
+                          if (teamOut.Played > club.played) return (
                           <ListItemButton disabled key={club["ID"]} onClick={() => {
                             setTeamIn(club); 
                             handleSelectIn(club); 
