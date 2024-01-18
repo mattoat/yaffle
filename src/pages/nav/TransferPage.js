@@ -331,7 +331,7 @@ export default function TransferPage() {
                         <Typography variant='body' >Remember, you can only transfer twice during this window.</Typography>
                         <br /> <br />
 
-                        {/* <Typography variant='h6' >You are transferring {teamOut.Name} for {teamIn.Name}. If this is correct, press confirm choice.</Typography> */}
+                        {/* <Typography variant='h6' >You are transferring {teamOut.Name} for {teamIn.Name}. If this is correct, press 'Confirm'.</Typography> */}
                         
                         <br />
                         <Alert severity="info">You are transferring {teamOut.Name} for {teamIn.Name}. If this is correct, press confirm choice.</Alert>
