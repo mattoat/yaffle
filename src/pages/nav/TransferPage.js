@@ -29,13 +29,15 @@ export default function TransferPage() {
   const [numberOfTransfers, setNumberOfTransfers] = useState(0);
   const [leagueTransfer, setLeagueTransfer] = useState([]);
   const [userOffset, setUserOffset] = useState(0);
+  const [confirm, setConfirm] = useState(false);
   
   const steps = ['Transfer Out', 'Transfer In', 'Confirm'];
   const leagueIDs = Object.keys(leagues)
   
 
   const handleConfirm = async () => {
-    let newOffset = userOffset + teamOut.Points - teamIn.Points;
+    // let newOffset = userOffset + teamOut.Points - teamIn.Points;
+    let newOffset = teamIn.Points - teamOut.Points + userOffset ;
     let newClub = teamIn.ID;
     let leagueID = teamIn.League;
     const transferLog = {
@@ -57,6 +59,7 @@ export default function TransferPage() {
       [`${leagueID}`]: newClub,
       transfers: numberOfTransfers + 1
     })
+    setConfirm(true);
   }
 
   const handleNext = () => {
@@ -157,7 +160,7 @@ export default function TransferPage() {
     setShowModel(true);
   }
   const handleSelectIn = async (club) => {
-    console.log()
+    setConfirm(true);
   }
   const handleSelectOut = async (club) => {
     setLoading(true);
@@ -228,7 +231,12 @@ export default function TransferPage() {
             </Page>
         );
       } 
-      else {
+      else if (confirm ){ 
+        return (<Page>
+          <Typography variant='h4'>Transfer submitted</Typography>
+      </Page>)
+    }
+    else {
         return (
           <Dialog
         fullScreen
@@ -357,5 +365,5 @@ export default function TransferPage() {
 
       </Dialog>
         )
-      }
+                    }
 }

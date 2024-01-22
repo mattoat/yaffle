@@ -51,7 +51,7 @@ export default function RouterComponent() {
               <Route path='leagues' element={ <LeaguePage />} />
               <Route path='select_teams' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
               <Route path='transfers' element={<RequireAuth> <TransferPage /> </RequireAuth>} />
-              <Route path='message' element={<RequireAuth> <SelectTeams /> </RequireAuth>} />
+              <Route path='message' element={<RequireAuth> <MessagePage /> </RequireAuth>} />
               <Route path='rules' element={<RulesPage /> } /> 
               <Route path='profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>} /> 
               <Route path='*'  element={<Navigate replace to="/" />}/>
